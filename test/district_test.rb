@@ -12,9 +12,10 @@ class DistrictTest < Minitest::Test
   end
 
   def test_name_returns_upcase_district_name
-    district  = District.new({:name => "academy 20"})
+    name      = "academy 20"
+    district  = District.new({:name => name})
     submitted = district.name
-    expected  = "ACADEMY 20"
+    expected  = name.upcase
 
     assert_equal expected, submitted
   end
