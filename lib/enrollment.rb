@@ -13,13 +13,10 @@ class Enrollment
   end
 
   def format_percentage(pct)
-    if pct.is_a? Float
-      # pct.round(3)
-      pct = pct.to_s[0..4].to_f
-    elsif pct.is_a? Fixnum
-      pct = pct.to_f
-    else
-      pct = "bad data"
+    case pct
+    when Float then pct.to_s[0..4].to_f
+    when Fixnum then pct.to_f
+    else "bad data"
     end
   end
 
@@ -35,6 +32,5 @@ class Enrollment
     raise ArgumentError unless year.is_a? Fixnum
     kindergarten_participation.has_key?(year)
   end
-
 
 end
