@@ -8,10 +8,9 @@ class DistrictRepository
     @districts = districts
   end
 
-  def find_district_by_name(name)
-    # returns nil or district object
+  def find_by_name(name)
     @districts.find do |district|
-      district.name = name.upcase
+      district.name == name.upcase
     end
   end
 

@@ -14,6 +14,26 @@ class DistrictRepositoryTest < Minitest::Test
     assert_kind_of DistrictRepository, @district_repo
   end
 
+  def test_can_find_district_by_name
+    district_1    = District.new({name: "New York"})
+    district_repo = DistrictRepository.new([district_1])
+
+    submitted = district_repo.find_by_name("New York")
+    expected  = district_1
+
+    assert_equal expected, submitted
+  end
+
+  def test_can_find_district_by_name_returns_nil_with_no_match
+    district_1    = District.new({name: "New York"})
+    district_repo = DistrictRepository.new([district_1])
+
+    submitted = district_repo.find_by_name("Colorado")
+    expected  = district_1
+
+    assert_nil submitted
+  end
+
   def test_can_find_multiple_matching_districts
     district_1    = District.new({name: "New York"})
     district_repo = DistrictRepository.new([district_1])
