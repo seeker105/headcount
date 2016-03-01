@@ -11,7 +11,6 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_can_create_enrollment_repo_object
-    # skip
     assert_kind_of DistrictRepository, @district_repo
   end
 
@@ -62,16 +61,6 @@ class DistrictRepositoryTest < Minitest::Test
                              })
 
 
-  end
-
-  def test_district_can_view_enrollments
-    district_1    = District.new({name: "New York"})
-    district_repo = DistrictRepository.new([district_1])
-
-    submitted = district_repo.find_all_matching("New York")
-    expected  = [district_1]
-
-    assert_equal expected, submitted
   end
 
 end

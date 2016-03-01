@@ -7,9 +7,9 @@ class EnrollmentTest < Minitest::Test
 
   def setup
     @enroll = Enrollment.new({name: "ACADEMY 20",
-              :kindergarten_participation => { 2010 => 0.3915,
-                                               2011 => 0.35356,
-                                               2012 => 0.2677 }})
+              kindergarten_participation: { 2010 => 0.3915,
+                                            2011 => 0.35356,
+                                            2012 => 0.2677 }})
   end
 
   def test_can_create_enrollment_object

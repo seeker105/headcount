@@ -18,9 +18,6 @@ class EnrollmentRepository
   end
 
   def find_by_name(name)
-    # case insensitive search
-    # returns enrollment object
-    # else returns nil
     @enrollments.find do |enrollment|
       enrollment.name = name.upcase
     end

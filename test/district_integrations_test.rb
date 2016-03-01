@@ -67,7 +67,7 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
   end
 
   def test_district_can_view_enrollments
-    # skip
+    skip
     district_1     = District.new({name: "ACADEMY 20"})
     district_repo  = DistrictRepository.new([district_1])
 
@@ -78,7 +78,6 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
     enrollment_repo = EnrollmentRepository.new([enrollment])
 
     district_repo.load_enrollments(enrollment_repo)
-    binding.pry
 
     assert_equal enrollment, district_repo.find_by_name("ACADEMY 20").enrollment
   end

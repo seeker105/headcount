@@ -15,7 +15,6 @@ class Enrollment
 
   def format_percentage(pct)
     case pct
-    # when Float then pct.to_s[0..4].to_f
     when Float then (pct * 1000).floor / 1000.0
     when Fixnum then pct.to_f
     else "bad data"
