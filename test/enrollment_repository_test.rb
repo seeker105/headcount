@@ -14,6 +14,9 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_load_can_accept_hash
+    @enrollment_repo.load_data({:enrollment => {
+                                :kindergarten => "./data/Kindergartners in full-day program.csv"}
+                               })
 
 
   end
