@@ -34,9 +34,9 @@ class Enrollment
     kindergarten_participation.has_key?(year)
   end
 
-  def kindgarten_participation_avg_across_all_years
+  def kd_participation_avg_all_yrs
     years = kindergarten_participation.values
-    years.reduce(:+) / years.count 
+    years.reduce(:+) / years.count
   end
 
 end

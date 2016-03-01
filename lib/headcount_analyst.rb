@@ -7,22 +7,30 @@ class HeadcountAnalyst
     @district_repo = district_repo
   end
 
-  def kindergarten_participation_rate_variation(dist_name, comparison_hash)
-    original   = kindergarten_participation_avg_per_location(dist_name)
-    comparison = kindergarten_participation_avg_per_location(comparison_hash[:against])
-    (original / comparison).round(3)
+  def kindergarten_participation_rate_variation(name, comparison)
+    original = kd_participation_total_avg_for_location(name)
+    compared = kd_participation_total_avg_for_location(comparison[:against])
+    (original / compared).round(3)
   end
 
-  def kindergarten_participation_avg_per_location(dist_name)
-    @district_repo.find_by_name(dist_name).enrollment.kindgarten_participation_avg_across_all_years
+  def kd_participation_total_avg_for_location(name)
+    @district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs
   end
 
-  def kindergarten_participation_rate_variation_trend(dist_name, comparison_hash)
-    result = {}
-    original   = @district_repo.find_by_name(dist_name).enrollment.kindergarten_participation
-    comparison = @district_repo.find_by_name(comparison_hash[:against]).enrollment.kindergarten_participation
+  def kd_participation_avg_for_each_year(name)
+    @district_repo.find_by_name(name).enrollment.kindergarten_participation
+  end
+
+  def kindergarten_participation_rate_variation_trend(name, comparison)
+    original = kd_participation_avg_for_each_year(name)
+    compared = kd_participation_avg_for_each_year(comparison[:against])
+    years_and_variation_trends(original, compared)
+  end
+
+  def years_and_variation_trends(original, compared)
+    result = Hash.new
     original.each_key do |key|
-      result[key] = (original[key] / comparison[key]).round(3)
+      result[key] = (original[key] / compared[key]).round(3)
     end
     result
   end
