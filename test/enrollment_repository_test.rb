@@ -10,7 +10,7 @@ class EnrollmentRepositoryTest < Minitest::Test
   end
 
   def test_can_create_enrollment_repo_object
-    skip
+    # skip
     assert_kind_of EnrollmentRepository, @enrollment_repo
   end
 
