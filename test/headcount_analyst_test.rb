@@ -38,12 +38,9 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_it_returns_the_kindergarten_participation_rate_trend
-    colorado_truncated_avg = 0.669
-    academy_truncated_avg  = 0.337
-    truncated_rate_variation = 0.504
-    submitted = @h_analyst.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
-
-    assert_equal truncated_rate_variation, submitted
+    submitted = @h_analyst.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
+    expected  = {2010=>0.611, 2011=>0.525, 2012=>0.384}
+    assert_equal expected, submitted
   end
 
 end
