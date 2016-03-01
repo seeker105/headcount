@@ -9,15 +9,11 @@ class DistrictRepository
   end
 
   def find_by_name(name)
-    @districts.find do |district|
-      district.name == name.upcase
-    end
+    @districts.find { |district| district.name == name.upcase }
   end
 
   def find_all_matching(name)
-    @districts.select do |district|
-      district.name.include?(name.upcase)
-    end
+    @districts.select { |district| district.name.include?(name.upcase) }
   end
 
   def load_enrollments(enrollments)
