@@ -12,8 +12,16 @@ class Enrollment
   end
 
   def kindergarten_participation_in_year(year)
+    if contains_year?(year)
+      enrollment_data[:kindergarten_participation].fetch(year)
+    else
+      nil
+    end
+  end
+
+  def contains_year?(year)
     raise ArgumentError unless year.class == Fixnum
-    enrollment_data[:kindergarten_participation]
+    enrollment_data[:kindergarten_participation].has_key?(year)
   end
 
 
