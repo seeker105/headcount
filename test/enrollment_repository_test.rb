@@ -15,7 +15,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert_kind_of EnrollmentRepository, @enrollment_repo
   end
 
-  def test_can_find_enrollment_by_name
+  def test_can_find_enrollment_by_name_insensitive_search
     # skip
     enrollment_1 = Enrollment.new({name: "ACADEMY 20",
                    kindergarten_participation: { 2010 => 0.3915,
@@ -28,13 +28,17 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert_equal enrollment_1, submitted
   end
 
-  def test_load_can_accept_hash
-    skip
-    @enrollment_repo.load_data({:enrollment => {
-                                :kindergarten => "./data/Kindergartners in full-day program.csv"}
-                               })
+  def test_can_find_enrollment_by_name_returns_nil_with_no_match
+    # skip
+    enrollment_1 = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677 }})
+    e_repo = EnrollmentRepository.new([enrollment_1])
 
+    submitted = e_repo.find_by_name("LASER SCHOOL")
 
+    assert_nil submitted
   end
 
 end
