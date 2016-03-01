@@ -65,4 +65,12 @@ class DistrictRepositoryTest < Minitest::Test
     assert_empty submitted
   end
 
+  def test_repo_can_load_data_from_csv_file
+    skip
+    dr = DistrictRepository.new
+    dr.load_data({ :enrollment => { :kindergarten => "./data/Kindergartners in full-day program.csv"}})
+
+    assert_equal expected, submitted
+  end
+
 end
