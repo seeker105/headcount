@@ -6,20 +6,28 @@ require_relative '../lib/enrollment'
 class EnrollmentTest < Minitest::Test
 
   def test_can_create_enrollment_object
-    enrollment = Enrollment.new({:name => "ACADEMY 20",
-      :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
-
-    assert_kind_of Enrollment, enrollment
+    enroll = Enrollment.new({:name => "ACADEMY 20",
+                             :kindergarten_participation => {2010 => 0.3915,
+                                                             2011 => 0.35356,
+                                                             2012 => 0.2677}
+                            })
+    assert_kind_of Enrollment, enroll
   end
 
-  def test_kindergarten_participat_by_year_returns_hash
-    skip
-    # name       = "academy 20"
-    # enrollment = Enrollment.new({:name => name})
-    # submitted  = enrollment.name
-    # expected   = name.upcase
-    #
-    # assert_equal expected, submitted
+  def test_kindergarten_participant_by_year_returns_hash_of_years_and_percentages
+    # skip
+    enroll = Enrollment.new({:name => "ACADEMY 20",
+                             :kindergarten_participation => {2010 => 0.3915,
+                                                             2011 => 0.35356,
+                                                             2012 => 0.2677}
+                            })
+    submitted  = enroll.kindergarten_participation_by_year
+    expected   = {2010 => 0.3915,
+                  2011 => 0.35356,
+                  2012 => 0.2677}
+
+    assert_equal expected, submitted
+    assert_kind_of Hash, expected
   end
 
 end
