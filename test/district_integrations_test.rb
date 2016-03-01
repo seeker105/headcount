@@ -21,7 +21,10 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
 
     district_repo.load_enrollments(enrollment_repo)
 
-    assert_equal enrollment, district_repo.find_by_name("ACADEMY 20").enrollment
+    submitted = district_repo.find_by_name("ACADEMY 20")
+
+    assert_equal enrollment, submitted.enrollment
+    assert_equal 0.391, submitted.enrollment.kindergarten_participation_in_year(2010)
   end
 
 end
