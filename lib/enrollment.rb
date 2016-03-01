@@ -17,7 +17,7 @@ class Enrollment
     case pct
     when Float then (pct * 1000).floor / 1000.0
     when Fixnum then pct.to_f
-    else "bad data"
+    else "bad percentage data"
     end
   end
 

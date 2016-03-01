@@ -35,16 +35,6 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_can_find_multiple_matching_districts
-    district_1    = District.new({name: "New York"})
-    district_repo = DistrictRepository.new([district_1])
-
-    submitted = district_repo.find_all_matching("New York")
-    expected  = [district_1]
-
-    assert_equal expected, submitted
-  end
-
-  def test_can_find_multiple_matching_districts
     district_1 = District.new({name: "New York"})
     district_2 = District.new({name: "New Hampsire"})
     district_3 = District.new({name: "Canada"})
@@ -56,6 +46,7 @@ class DistrictRepositoryTest < Minitest::Test
     submitted = district_repo.find_all_matching("New")
     expected  = [district_1, district_2]
 
+    assert_kind_of Array, submitted
     assert_equal expected, submitted
   end
 
@@ -72,15 +63,6 @@ class DistrictRepositoryTest < Minitest::Test
 
     assert_kind_of Array, submitted
     assert_empty submitted
-  end
-
-  def test_load_can_accept_hash
-    skip
-    @district_repo.load_data({enrollment: {
-                              kindergarten: "./data/Kindergartners in full-day program.csv"}
-                             })
-
-
   end
 
 end
