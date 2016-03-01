@@ -9,7 +9,6 @@ class EnrollmentRepository
       csv_file = CSV.open value, headers: true, header_converters: :symbol
       csv_file.each do |row|
         location = row[:location]
-        puts location
       end
     end
   end

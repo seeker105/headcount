@@ -40,7 +40,7 @@ class EnrollmentTest < Minitest::Test
 
   def test_kindergarten_participant_in_year_returns_float_percentage
     submitted = @enroll.kindergarten_participation_in_year(2012)
-    expected  = 0.2677
+    expected  = 0.267
 
     assert_equal expected, submitted
   end
