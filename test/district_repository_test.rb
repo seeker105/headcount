@@ -73,8 +73,22 @@ class DistrictRepositoryTest < Minitest::Test
     submitted = dist_repo.districts.count
     expected = 181
 
+    assert_equal expected, submitted
+  end
+
+  def test_district_repo_auto_creates_enrollment
+    skip
+    dist_repo = DistrictRepository.new
+    dist_repo.load_data({ :enrollment => { :kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    dist_repo.load_enrollments
+
+    district  = dist_repo.find_by_name("ACADEMY 20")
+    binding.pry
+    submitted = district.enrollment.kindergarten_participation_in_year(2010)
+    expected  = 0.391
 
     assert_equal expected, submitted
   end
+
 
 end

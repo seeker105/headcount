@@ -20,7 +20,11 @@ class HeadcountAnalystTest < Minitest::Test
                                                       2011 => 0.672,
                                                       2012 => 0.695 }})
     enrollment_repo = EnrollmentRepository.new([enrollment_1, enrollment_2])
-    district_repo.load_enrollments(enrollment_repo)
+
+    # district_repo.load_enrollments(enrollment_repo)
+    district_repo.enrollment_repo = enrollment_repo
+    district_repo.load_enrollments
+
     @h_analyst      = HeadcountAnalyst.new(district_repo)
   end
 

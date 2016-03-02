@@ -24,7 +24,10 @@ class EnrollmentRepository
     # refactor to use unless?
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
+      # different processing for different files
+      # create one name pointing to multiple years
       location = row[:location]
+      # binding.pry
       @enrollments << Enrollment.new({name: location})
     end
   end

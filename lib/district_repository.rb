@@ -2,7 +2,8 @@ require 'pry'
 require 'csv'
 
 class DistrictRepository
-  attr_reader :districts, :enrollments
+  attr_reader :districts #, :enrollment_repo
+  attr_accessor :enrollment_repo
 
   def initialize(districts = [])
     @districts = districts
@@ -21,7 +22,9 @@ class DistrictRepository
   end
 
   def create_repositories(data_hash)
-    data_hash.each_key { |key| parse_map[key].load_data(data_hash) }
+    data_hash.each_key do |key|
+      parse_map[key].load_data(data_hash)
+    end
   end
 
   def parse_district_info(data_hash, key)
@@ -46,9 +49,16 @@ class DistrictRepository
     @districts.select { |district| district.name.include?(name.upcase) }
   end
 
-  def load_enrollments(enrollments)
+  # def load_enrollments(enrollments)
+  #   @districts.each do |district|
+  #     district.enrollment = enrollments.find_by_name(district.name)
+  #   end
+  # end
+
+  def load_enrollments
+    # works if load_data works properly
     @districts.each do |district|
-      district.enrollment = enrollments.find_by_name(district.name)
+      district.enrollment = @enrollment_repo.find_by_name(district.name)
     end
   end
 
