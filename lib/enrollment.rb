@@ -1,14 +1,16 @@
 require 'pry'
 
 class Enrollment
-  attr_reader :data, :name
+  attr_reader :name, :kindergarten_participation, :high_school_graduation
 
   def initialize(data)
-    @data = data
     @name = data[:name].upcase
+    @kindergarten_participation = clean_data(data[:kindergarten_participation])
+    @high_school_graduation = clean_data(data[:high_school_graduation])
   end
 
   def clean_data(data)
+    return data if data.nil?
     data.each_pair { |year, pct| data[year] = format_percentage(pct) }
   end
 
@@ -21,8 +23,7 @@ class Enrollment
   end
 
   def kindergarten_participation_by_year
-    binding.pry
-    clean_data(data[:kindergarten_participation])
+    kindergarten_participation
   end
 
   def kindergarten_participation_in_year(year)
@@ -40,7 +41,7 @@ class Enrollment
   end
 
   def graduation_rate_by_year
-    clean_data(data[:high_school_graduation])
+    high_school_graduation
   end
 
 end
