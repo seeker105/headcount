@@ -21,15 +21,11 @@ class DistrictRepository
   end
 
   def create_repositories(data_hash)
-    data_hash.each_key do |key|
-      parse_map[key].load_data(data_hash)
-    end
+    data_hash.each_key { |key| parse_map[key].load_data(data_hash) }
   end
 
   def parse_district_info(data_hash, key)
-    data_hash[key].each_value do |value|
-      create_districts(value)
-    end
+    data_hash[key].each_value { |value| create_districts(value) }
   end
 
   def create_districts(file)
