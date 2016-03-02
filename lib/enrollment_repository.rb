@@ -10,6 +10,12 @@ class EnrollmentRepository
 
   def load_data(data_hash)
     data_hash.each_value do |value|
+      parse_loaded_data(value)
+    end
+  end
+
+  def parse_loaded_data(data_hash)
+    data_hash.each_value do |value|
       create_enrollments(value)
     end
   end
@@ -18,10 +24,14 @@ class EnrollmentRepository
     # refactor to use unless?
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
-      # binding.pry
       location = row[:location]
       @enrollments << Enrollment.new({name: location})
     end
+  end
+
+  def consolidate_enrollment_years
+
+
   end
 
   def find_by_name(name)

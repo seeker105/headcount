@@ -6,42 +6,30 @@ class DistrictRepository
 
   def initialize(districts = [])
     @districts = districts
+    @enrollment_repo = EnrollmentRepository.new
   end
 
   def parse_map
-    {:enrollment => EnrollmentRepository}
+    {:enrollment => @enrollment_repo}
   end
-
-  # def load_data(data_hash)
-  #   # => create relevant repositories
-  #   # data_hash.each_key do |key|
-  #   #   parse_map[key].load_data(data_hash[key])
-  #   # end
-  #
-  #   # create uniq district objects
-  #   data_hash.each_key do |key|
-  #     data_hash[key].each_value do |value|
-  #       create_districts(value)
-  #     end
-  #   end
-  #   binding.pry
-  # end
 
   def load_data(data_hash)
     data_hash.each_key do |key|
       parse_district_info(data_hash, key)
-      # create_repositories(data_hash)
+      create_repositories(data_hash)
     end
   end
 
   def create_repositories(data_hash)
     data_hash.each_key do |key|
-      parse_map[key].new.load_data(data_hash[key])
+      parse_map[key].load_data(data_hash)
     end
   end
 
   def parse_district_info(data_hash, key)
-    data_hash[key].each_value { |value| create_districts(value) }
+    data_hash[key].each_value do |value|
+      create_districts(value)
+    end
   end
 
   def create_districts(file)

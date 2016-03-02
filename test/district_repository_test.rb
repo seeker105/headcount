@@ -67,8 +67,12 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_repo_can_load_data_from_csv_file
     skip
-    dr = DistrictRepository.new
-    dr.load_data({ :enrollment => { :kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    dist_repo = DistrictRepository.new
+    dist_repo.load_data({ :enrollment => { :kindergarten => "./data/Kindergartners in full-day program.csv"}})
+
+    submitted = dist_repo.districts.count
+    expected = 181
+
 
     assert_equal expected, submitted
   end
