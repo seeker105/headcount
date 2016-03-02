@@ -18,9 +18,9 @@ class DistrictRepository
       :kindergarten_participation => { 2010 => 0.3805,
         2011 => 0.35456,
         2012 => 0.2687 },
-      :high_school_graduation => { 2010 => 0.3434,
-        2011 => 0.6845,
-        2012 => 0.1123 }})
+        :high_school_graduation => { 2010 => 0.3434,
+          2011 => 0.6845,
+          2012 => 0.1123 }})
     e2 = Enrollment.new({:name => "GREEN MOUNTAIN",
       :kindergarten_participation => { 2010 => 0.5777,
         2011 => 0.8184,

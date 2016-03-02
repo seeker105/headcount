@@ -47,6 +47,13 @@ class Enrollment
     years.reduce(:+) / years.count
   end
 
+  def graduation_rate_by_year
+    enrollment_data[:high_school_graduation]
+  end
+
+  def graduation_rate_in_year(year)
+    enrollment_data[:high_school_graduation][year]
+  end
 
 end
 

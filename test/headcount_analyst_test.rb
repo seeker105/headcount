@@ -46,4 +46,8 @@ class HeadcountRepositoryTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+  def test_kindergarten_participation_against_high_school_graduation_returns_the_correct_value
+    submitted = kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+  end
+
 end
