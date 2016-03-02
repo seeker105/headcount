@@ -16,44 +16,40 @@ class EnrollmentRepository
 
   def parse_loaded_data(data_hash)
     data_hash.each_value do |value|
-      create_enrollments(value)
+      parse_csv_data(value)
     end
   end
 
-  def create_enrollments(file)
-    # refactor to use unless?
-    # enroll = Hash.new
-    # kindergarten = Hash.new
-    all = []
-
+  def parse_csv_data(file)
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
-      # different processing for different files
-      # create one name pointing to multiple years
-
-      enroll = Hash.new
-      kindergarten = Hash.new
-
-      location = row[:location]
-      enroll[:name] = location
-      enroll[:kindergarten_participation] = kindergarten
-      kindergarten[row[:timeframe].to_i] = row[:data].to_f
-
-      # @enrollments << Enrollment.new({name: location})
-      all << enroll
-      @enrollments << Enrollment.new({name: location, :kindergarten_participation => kindergarten})
-      # binding.pry
+      district = row[:location]
+      year_and_percentage = { row[:timeframe].to_i => row[:data].to_f }
+      create_enrollments(district, year_and_percentage)
     end
-    # binding.pry
   end
 
-  # contents.group_by do |row|
-  # => row[:location]
-  # end
-  # result.each_value do |csv_obj|
-  # => kindergarten[row[:timeframe]] = row[:data]
-  # end
+  def create_enrollments(district, year_and_percentage)
+    if find_by_name(district).nil?
+      @enrollments << Enrollment.new({name: district, kindergarten_participation: year_and_percentage})
+    else
+      match = find_by_name(district)
+      match.kindergarten_participation.merge!(clean_data(year_and_percentage))
+    end
+  end
 
+  def clean_data(data)
+    return data if data.nil?
+    data.each_pair { |year, pct| data[year] = format_percentage(pct) }
+  end
+
+  def format_percentage(pct)
+    case pct
+    when Float then (pct * 1000).floor / 1000.0
+    when Fixnum then pct.to_f
+    else "bad percentage data"
+    end
+  end
 
   def find_by_name(name)
     @enrollments.find { |enrollment| enrollment.name == name.upcase }
