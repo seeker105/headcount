@@ -1,12 +1,11 @@
 require 'pry'
 
 class Enrollment
-  attr_reader :kindergarten_participation
-  attr_accessor :name
+  attr_reader :data, :name
 
   def initialize(data)
+    @data = data
     @name = data[:name].upcase
-    @kindergarten_participation = clean_data(data[:kindergarten_participation])
   end
 
   def clean_data(data)
@@ -22,7 +21,8 @@ class Enrollment
   end
 
   def kindergarten_participation_by_year
-    kindergarten_participation
+    binding.pry
+    clean_data(data[:kindergarten_participation])
   end
 
   def kindergarten_participation_in_year(year)
@@ -37,6 +37,10 @@ class Enrollment
   def kd_participation_avg_all_yrs
     years = kindergarten_participation.values
     years.reduce(:+) / years.count
+  end
+
+  def graduation_rate_by_year
+    clean_data(data[:high_school_graduation])
   end
 
 end

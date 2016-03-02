@@ -66,7 +66,7 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_repo_can_load_data_from_csv_file
-    skip
+    # skip
     dist_repo = DistrictRepository.new
     dist_repo.load_data({ :enrollment => { :kindergarten => "./data/Kindergartners in full-day program.csv"}})
 

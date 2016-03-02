@@ -45,4 +45,28 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+  def test_can_return_graduation_rates_by_year
+    # skip
+    enrollment_1 = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677,
+                                                 2013 => 0.48774,
+                                                 2014 => 0.49022 },
+                   high_school_graduation: { 2010 => 0.895,
+                                             2011 => 0.895,
+                                             2012 => 0.88983,
+                                             2013 => 0.91373,
+                                             2014 => 0.898 }})
+   expected = { 2010 => 0.895,
+                2011 => 0.895,
+                2012 => 0.889,
+                2013 => 0.913,
+                2014 => 0.898 }
+
+    submitted = enrollment_1.graduation_rate_by_year
+
+    assert_equal expected, submitted
+  end
+
 end

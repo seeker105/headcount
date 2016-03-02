@@ -29,11 +29,6 @@ class EnrollmentRepository
     end
   end
 
-  def consolidate_enrollment_years
-
-
-  end
-
   def find_by_name(name)
     @enrollments.find { |enrollment| enrollment.name == name.upcase }
   end
