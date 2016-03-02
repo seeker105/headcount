@@ -49,14 +49,7 @@ class DistrictRepository
     @districts.select { |district| district.name.include?(name.upcase) }
   end
 
-  # def load_enrollments(enrollments)
-  #   @districts.each do |district|
-  #     district.enrollment = enrollments.find_by_name(district.name)
-  #   end
-  # end
-
   def load_enrollments
-    # works if load_data works properly
     @districts.each do |district|
       district.enrollment = @enrollment_repo.find_by_name(district.name)
     end

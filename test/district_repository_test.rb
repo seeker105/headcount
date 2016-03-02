@@ -83,7 +83,7 @@ class DistrictRepositoryTest < Minitest::Test
     dist_repo.load_enrollments
 
     district  = dist_repo.find_by_name("ACADEMY 20")
-  
+
     submitted = district.enrollment.kindergarten_participation_in_year(2010)
     expected  = 0.436
 
