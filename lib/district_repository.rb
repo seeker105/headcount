@@ -44,11 +44,11 @@ class DistrictRepository
   end
 
   def find_by_name(name)
-    districts.select { |district| district.name == name.upcase }.pop
+    districts.find { |district| district.name == name.upcase }
   end
 
   def find_all_matching(name)
-    result = districts.select do |district|
+    districts.select do |district|
       district.name.match(name.upcase) != nil
     end
   end
