@@ -11,11 +11,7 @@ class EnrollmentRepository
   end
 
   def find_by_name(name)
-    result = enrollments.select { |enrollment| enrollment.name == name.upcase }
-    if result.length == 0
-      result = nil
-    end
-    result
+    enrollments.select{ |enrollment| enrollment.name == name.upcase }.pop
   end
 
 

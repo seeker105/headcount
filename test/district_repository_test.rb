@@ -18,7 +18,7 @@ class DistrictRepositoryTest < Minitest::Test
     district_repo = DistrictRepository.new
     district_repo.districts << district
     submitted = district_repo.find_by_name("ACADEMY 20")
-    expected  = [district]
+    expected  = district
     assert_equal expected, submitted
   end
 
@@ -27,25 +27,25 @@ class DistrictRepositoryTest < Minitest::Test
     district_repo = DistrictRepository.new
     district_repo.districts << district
     submitted = district_repo.find_by_name("academy 20")
-    expected  = [district]
+    expected  = district
     assert_equal expected, submitted
 
     district = District.new({:name => "ACADEMY 20"})
     district_repo = DistrictRepository.new
     district_repo.districts << district
     submitted = district_repo.find_by_name("acADemy 20")
-    expected  = [district]
+    expected  = district
     assert_equal expected, submitted
   end
 
-  def test_fine_all_matching_returns_an_empty_array_if_no_matches_on_an_empty_array
+  def test_find_all_matching_returns_nil_array_if_no_matches_on_an_empty_array
     dr = DistrictRepository.new
     submitted = dr.find_all_matching("ACADEMY 20")
     expected  = []
     assert_equal expected, submitted
   end
 
-  def test_fine_all_matching_returns_an_empty_array_if_no_matches_on_a_non_empty_array
+  def test_find_all_matching_returns_nil_array_if_no_matches_on_a_non_empty_array
     district  = District.new({:name => "ACADEMY 20"})
     district_repo = DistrictRepository.new
     district_repo.districts << district
@@ -116,5 +116,5 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal expected, submitted
   end
 
-  
+
 end
