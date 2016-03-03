@@ -11,13 +11,13 @@ require_relative '../lib/clean_data'
 class DataManager
   include CleanData
 
-  attr_reader :all_districts, :kg_district_with_data, :hs_district_with_data
+  attr_reader :all_districts, :all_enrollments, :kg_district_with_data, :hs_district_with_data
 
-  def initialize(data_hash)
+  def initialize
     @all_districts = []
+    @all_enrollments = []
     @kg_district_with_data = {}
     @hs_district_with_data = {}
-    load_data(data_hash)
   end
 
   def load_data(data_hash)
@@ -42,7 +42,7 @@ class DataManager
   def parse_csv_data(file)
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
-      district_names(row)
+      create_districts(row)
       if file == "./data/Kindergartners in full-day program.csv"
         collect_kg_participation_data(row)
       else
@@ -51,25 +51,34 @@ class DataManager
     end
   end
 
-  def district_names(row)
-    unless all_districts.include?(row[:location])
-      all_districts << row[:location]
+  def create_districts(row)
+    unless all_districts.any? {|district| district.name == row[:location].upcase}
+      all_districts << District.new({name: row[:location]})
     end
   end
 
+  def create_enrollments
+    all_districts.each do |district|
+      all_enrollments << Enrollment.new({name: district.name,
+        kindergarten_participation: kg_district_with_data.fetch(district.name),
+        high_school_graduation: hs_district_with_data.fetch(district.name)})
+    end
+    all_enrollments
+  end
+
   def collect_kg_participation_data(row)
-    unless kg_district_with_data.has_key?(row[:location])
-      kg_district_with_data[row[:location]] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
+    unless kg_district_with_data.has_key?(row[:location].upcase)
+      kg_district_with_data[row[:location].upcase] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
     else
-      kg_district_with_data.fetch(row[:location]).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
+      kg_district_with_data.fetch(row[:location].upcase).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
     end
   end
 
   def collect_hs_graduation_data(row)
-    unless hs_district_with_data.has_key?(row[:location])
-      hs_district_with_data[row[:location]] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
+    unless hs_district_with_data.has_key?(row[:location].upcase)
+      hs_district_with_data[row[:location].upcase] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
     else
-      hs_district_with_data.fetch(row[:location]).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
+      hs_district_with_data.fetch(row[:location].upcase).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
     end
   end
 

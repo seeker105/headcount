@@ -15,8 +15,10 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_can_find_district_by_name
+    skip
     district_1    = District.new({name: "New York"})
-    district_repo = DistrictRepository.new([district_1])
+    district_repo = DistrictRepository.new
+    district_repo.districts << district_1
 
     submitted = district_repo.find_by_name("New York")
     expected  = district_1
@@ -25,6 +27,7 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_can_find_district_by_name_returns_nil_with_no_match
+    skip
     district_1    = District.new({name: "New York"})
     district_repo = DistrictRepository.new([district_1])
 
@@ -35,6 +38,7 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_can_find_multiple_matching_districts
+    skip
     district_1 = District.new({name: "New York"})
     district_2 = District.new({name: "New Hampsire"})
     district_3 = District.new({name: "Canada"})
@@ -51,6 +55,7 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_returns_empty_array_if_no_matching_names
+    skip
     district_1 = District.new({name: "New York"})
     district_2 = District.new({name: "New Hampsire"})
     district_3 = District.new({name: "Canada"})
@@ -65,22 +70,11 @@ class DistrictRepositoryTest < Minitest::Test
     assert_empty submitted
   end
 
-  def test_repo_can_load_data_from_csv_file
-    # skip
-    dist_repo = DistrictRepository.new
-    dist_repo.load_data({ :enrollment => { :kindergarten => "./data/Kindergartners in full-day program.csv"}})
-
-    submitted = dist_repo.districts.count
-    expected = 181
-
-    assert_equal expected, submitted
-  end
-
   def test_district_repo_auto_creates_enrollment
     # skip
     dist_repo = DistrictRepository.new
-    dist_repo.load_data({ :enrollment => { :kindergarten => "./data/Kindergartners in full-day program.csv"}})
-    dist_repo.load_enrollments
+    dist_repo.load_data(:enrollment => {
+      :kindergarten => "./data/Kindergartners in full-day program.csv"})
 
     district  = dist_repo.find_by_name("ACADEMY 20")
 
@@ -91,7 +85,7 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_district_repo_mock_spec_test
-    # skip
+    skip
     dr = DistrictRepository.new
     dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
     district = dr.find_by_name("GUNNISON WATERSHED RE1J")

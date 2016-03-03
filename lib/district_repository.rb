@@ -3,53 +3,39 @@ require 'csv'
 require_relative '../lib/enrollment_repository'
 require_relative '../lib/district'
 require_relative '../lib/enrollment'
+require_relative '../lib/data_manager'
 
 class DistrictRepository
-  attr_reader :districts, :enrollments, :enrollment_repo
-  # attr_accessor :enrollment_repo
+  attr_reader :districts, :data_manager, :enrollment_repo
 
   def initialize
-    @districts = []
-    @enrollments = []
+    @data_manager = DataManager.new
     @enrollment_repo = EnrollmentRepository.new
   end
 
-  def parse_map
-    {:enrollment => @enrollment_repo}
-  end
-
   def load_data(data)
-    dm = DataManager.new(data)
-    districts = dm.all_districts
-
-    districts.each do |district|
-      @districts << District.new({name: district})
-      @enrollments << Enrollment.new({name: district,
-        kindergarten_participation: dm.kg_district_with_data.fetch(district),
-        high_school_graduation: dm.hs_district_with_data.fetch(district)})
-    end
-    binding.pry
+    data_manager.load_data(data)
+    populate_district_repo
+    populate_enrollment_repo(data)
+    # binding.pry
+    load_enrollments
   end
 
-  def create_repositories(data_hash)
-    data_hash.each_key do |key|
-      parse_map[key].load_data(data_hash)
-    end
+  def load_relationships
+    load_enrollments
+  end
+
+  def populate_district_repo
+    @districts = data_manager.all_districts
+  end
+
+  def populate_enrollment_repo(data)
+    @enrollment_repo.load_data(data)
   end
 
   def parse_district_info(data_hash, key)
     data_hash[key].each_value { |value| create_districts(value) }
   end
-
-  # def create_districts(file)
-  #   # refactor to use unless?
-  #   contents = CSV.open file, headers: true, header_converters: :symbol
-  #   contents.each do |row|
-  #     location = row[:location]
-  #     @districts << District.new({name: location})
-  #   end
-  #   @districts.uniq! { |district| district.name }
-  # end
 
   def find_by_name(name)
     @districts.find { |district| district.name == name.upcase }

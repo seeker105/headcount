@@ -15,8 +15,6 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
       :kindergarten => "./data/Kindergartners in full-day program.csv",
       :high_school_graduation => "./data/High school graduation rates.csv"})
 
-    # district_repo.load_enrollments
-    binding.pry
     submitted = district_repo.find_by_name("ACADEMY 20")
 
     assert_equal 0.436, submitted.enrollment.kindergarten_participation_in_year(2010)
