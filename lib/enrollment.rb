@@ -9,6 +9,7 @@ class Enrollment
     @high_school_graduation = clean_data(data[:high_school_graduation])
   end
 
+### Module?
   def clean_data(data)
     return data if data.nil?
     data.each_pair { |year, pct| data[year] = format_percentage(pct) }
@@ -21,6 +22,7 @@ class Enrollment
     else "bad percentage data"
     end
   end
+###
 
   def kindergarten_participation_by_year
     kindergarten_participation
