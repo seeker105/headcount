@@ -47,7 +47,7 @@ class EnrollmentTest < Minitest::Test
 
   def test_can_return_graduation_rates_by_year
     # skip
-    enrollment_1 = Enrollment.new({name: "ACADEMY 20",
+    enroll = Enrollment.new({name: "ACADEMY 20",
                    kindergarten_participation: { 2010 => 0.3915,
                                                  2011 => 0.35356,
                                                  2012 => 0.2677,
@@ -58,13 +58,53 @@ class EnrollmentTest < Minitest::Test
                                              2012 => 0.88983,
                                              2013 => 0.91373,
                                              2014 => 0.898 }})
-   expected = { 2010 => 0.895,
-                2011 => 0.895,
-                2012 => 0.889,
-                2013 => 0.913,
-                2014 => 0.898 }
 
-    submitted = enrollment_1.graduation_rate_by_year
+    submitted = enroll.graduation_rate_by_year
+    expected = { 2010 => 0.895,
+                 2011 => 0.895,
+                 2012 => 0.889,
+                 2013 => 0.913,
+                 2014 => 0.898 }
+
+    assert_equal expected, submitted
+  end
+
+  def test_can_return_graduation_avg_for_all_years
+    # skip
+    enroll = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677,
+                                                 2013 => 0.48774,
+                                                 2014 => 0.49022 },
+                   high_school_graduation: { 2010 => 0.895,
+                                             2011 => 0.895,
+                                             2012 => 0.88983,
+                                             2013 => 0.91373,
+                                             2014 => 0.898 }})
+
+    submitted = enroll.graduation_avg_all_years
+    expected  = 0.898
+
+    assert_equal expected, submitted
+  end
+
+  def test_can_return_graduation_in_specific_year
+    # skip
+    enroll = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677,
+                                                 2013 => 0.48774,
+                                                 2014 => 0.49022 },
+                   high_school_graduation: { 2010 => 0.895,
+                                             2011 => 0.895,
+                                             2012 => 0.88983,
+                                             2013 => 0.91373,
+                                             2014 => 0.898 }})
+
+    submitted = enroll.graduation_rate_in_year(2012)
+    expected  = 0.889
 
     assert_equal expected, submitted
   end
