@@ -15,7 +15,20 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert_kind_of EnrollmentRepository, @enrollment_repo
   end
 
-  def test_can_find_enrollment_by_name_insensitive_search
+  def test_find_by_name_returns_enrollment_object
+    # skip
+    enrollment_1 = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677 }})
+    e_repo = EnrollmentRepository.new([enrollment_1])
+
+    submitted = e_repo.find_by_name("ACADEMY 20")
+
+    assert_equal enrollment_1, submitted
+  end
+
+  def test_find_by_name_insensitive_search_returns_enrollment_object
     # skip
     enrollment_1 = Enrollment.new({name: "ACADEMY 20",
                    kindergarten_participation: { 2010 => 0.3915,
@@ -28,7 +41,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert_equal enrollment_1, submitted
   end
 
-  def test_can_find_enrollment_by_name_returns_nil_with_no_match
+  def test_find_by_name_returns_nil_with_no_matching_enrollment_object
     # skip
     enrollment_1 = Enrollment.new({name: "ACADEMY 20",
                    kindergarten_participation: { 2010 => 0.3915,

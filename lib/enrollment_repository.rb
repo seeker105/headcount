@@ -1,13 +1,8 @@
 require 'pry'
 require 'csv'
-require_relative '../lib/enrollment'
-require_relative '../lib/data_manager'
-require_relative '../lib/clean_data'
 require_relative '../lib/data_manager'
 
 class EnrollmentRepository
-  include CleanData
-
   attr_reader :data, :enrollments
 
   def initialize(enrollments = [])
