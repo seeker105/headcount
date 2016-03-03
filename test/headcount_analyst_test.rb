@@ -54,7 +54,7 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_it_returns_the_kindergarten_participation_rate_trend
-    skip
+    # skip
     district_repo  = DistrictRepository.new
     district_repo.load_data(:enrollment => {
       :kindergarten => "./data/Kindergartners in full-day program.csv",

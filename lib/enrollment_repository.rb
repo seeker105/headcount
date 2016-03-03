@@ -31,7 +31,7 @@ class EnrollmentRepository
   end
 
   def create_enrollments(file, district, year_and_percentage)
-    # binding.pry
+
     if file.include?('Kindergartners')
       a1 = :kindergarten_participation
       a2 = :high_school_graduation
