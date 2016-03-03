@@ -25,16 +25,34 @@ class EnrollmentRepository
     contents.each do |row|
       district = row[:location]
       year_and_percentage = { row[:timeframe].to_i => row[:data].to_f }
-      create_enrollments(district, year_and_percentage)
+      create_enrollments(file, district, year_and_percentage)
     end
   end
 
-  def create_enrollments(district, year_and_percentage)
+  def create_enrollments(file, district, year_and_percentage)
+
+    if file == "./data/Kindergartners in full-day program.csv"
+      a1 = :kindergarten_participation
+      a2 = :high_school_graduation
+    else
+      a1 = :high_school_graduation
+      a2 = :kindergarten_participation
+    end
+
+
     if find_by_name(district).nil?
-      @enrollments << Enrollment.new({name: district, kindergarten_participation: year_and_percentage})
+      @enrollments << Enrollment.new({name: district,
+        a1 => year_and_percentage,
+        a2 => {}})
     else
       match = find_by_name(district)
-      match.kindergarten_participation.merge!(clean_data(year_and_percentage))
+
+      if a1 == :kindergarten_participation
+        match.kindergarten_participation.merge!(clean_data(year_and_percentage))
+      else
+        match.high_school_graduation.merge!(clean_data(year_and_percentage))
+      end
+      
     end
   end
 
