@@ -1,14 +1,13 @@
 require 'pry'
-require 'csv'
-require_relative '../lib/enrollment_repository'
-require_relative '../lib/district'
-require_relative '../lib/enrollment'
 require_relative '../lib/data_manager'
+require_relative '../lib/enrollment_repository'
 
 class DistrictRepository
-  attr_reader :districts, :data_manager, :enrollment_repo
+  attr_reader :data_manager, :enrollment_repo
+  attr_accessor :districts
 
   def initialize
+    @districts = []
     @data_manager = DataManager.new
     @enrollment_repo = EnrollmentRepository.new
   end
@@ -17,8 +16,9 @@ class DistrictRepository
     data_manager.load_data(data)
     populate_district_repo
     populate_enrollment_repo(data)
+
     # binding.pry
-    load_enrollments
+    load_relationships
   end
 
   def load_relationships
@@ -31,10 +31,6 @@ class DistrictRepository
 
   def populate_enrollment_repo(data)
     @enrollment_repo.load_data(data)
-  end
-
-  def parse_district_info(data_hash, key)
-    data_hash[key].each_value { |value| create_districts(value) }
   end
 
   def find_by_name(name)

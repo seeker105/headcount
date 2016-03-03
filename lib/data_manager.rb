@@ -87,25 +87,4 @@ class DataManager
     end
   end
 
-
-  # def district_names(file_name)
-  #   rows = CSV.open filename, headers: true, header_converters: :symbol
-  #   result = []
-  #   rows.each do [row]
-  #     if !result.include? row[:location]
-  #       result << row[:location]
-  #     end
-  #     result
-  #   # creates array of all uniq district names
-  #   # then passes that back to the District Repo class
-  #   # who then creates all the individual District Objects
-  # end
-
-  def year_value_pairs(district_name)
-    # for the given district return an array of year => percentage
-    # hashes for that district
-    # => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}
-  end
-
-
 end
