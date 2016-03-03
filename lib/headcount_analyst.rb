@@ -35,4 +35,13 @@ class HeadcountAnalyst
     result
   end
 
+  def kindergarten_participation_against_high_school_graduation(name)
+    kindergarten_variation = kd_participation_total_avg_for_location(name)
+    graduation_variation   = high_school_grad_rate_divided_by_state_avg(name)
+  end
+
+  def high_school_grad_rate_divided_by_state_avg(name)
+    # binding.pry
+  end
+
 end
