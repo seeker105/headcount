@@ -31,8 +31,8 @@ class EnrollmentRepository
   end
 
   def create_enrollments(file, district, year_and_percentage)
-
-    if file == "./data/Kindergartners in full-day program.csv"
+    # binding.pry
+    if file.include?('Kindergartners')
       a1 = :kindergarten_participation
       a2 = :high_school_graduation
     else

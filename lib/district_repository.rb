@@ -4,8 +4,8 @@ require_relative '../lib/enrollment_repository'
 require_relative '../lib/district'
 
 class DistrictRepository
-  attr_reader :districts #, :enrollment_repo
-  attr_accessor :enrollment_repo
+  attr_reader :districts, :enrollment_repo
+  # attr_accessor :enrollment_repo
 
   def initialize(districts = [])
     @districts = districts
