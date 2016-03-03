@@ -53,7 +53,7 @@ class Enrollment
 
   def graduation_rate_in_year(year)
     if contains_year?(year, high_school_graduation)
-      kindergarten_participation.fetch(year)
+      high_school_graduation.fetch(year)
     end
   end
 
