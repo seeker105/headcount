@@ -46,13 +46,9 @@ class Enrollment
     high_school_graduation
   end
 
-  def graduation_avg_all_years(name)
+  def graduation_avg_all_years
     years = high_school_graduation.values
     years.reduce(:+) / years.count
-  end
-
-  def graduation_statewide_avg
-
   end
 
   def graduation_rate_in_year(year)

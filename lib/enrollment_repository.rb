@@ -1,5 +1,6 @@
 require 'pry'
 require 'csv'
+require_relative '../lib/enrollment'
 
 class EnrollmentRepository
   attr_reader :data, :enrollments
@@ -52,7 +53,7 @@ class EnrollmentRepository
       else
         match.high_school_graduation.merge!(clean_data(year_and_percentage))
       end
-      
+
     end
   end
 

@@ -1,5 +1,7 @@
 require 'pry'
 require 'csv'
+require_relative '../lib/enrollment_repository'
+require_relative '../lib/district'
 
 class DistrictRepository
   attr_reader :districts #, :enrollment_repo
@@ -19,6 +21,7 @@ class DistrictRepository
       parse_district_info(data_hash, key)
       create_repositories(data_hash)
     end
+    load_enrollments
   end
 
   def create_repositories(data_hash)

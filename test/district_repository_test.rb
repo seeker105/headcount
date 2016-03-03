@@ -90,5 +90,17 @@ class DistrictRepositoryTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+  def test_district_repo_mock_spec_test
+    # skip
+    dr = DistrictRepository.new
+    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    district = dr.find_by_name("GUNNISON WATERSHED RE1J")
+
+    submitted = district.enrollment.kindergarten_participation_in_year(2004)
+    expected  = 0.144
+
+    assert_equal expected, submitted
+  end
+
 
 end
