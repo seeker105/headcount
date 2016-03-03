@@ -53,15 +53,20 @@ class DataManager
 
   def create_districts(row)
     unless all_districts.any? {|district| district.name == row[:location].upcase}
-      all_districts << District.new({name: row[:location]})
+      all_districts << District.new({name: row[:location].upcase})
     end
   end
 
   def create_enrollments
     all_districts.each do |district|
-      all_enrollments << Enrollment.new({name: district.name,
-        kindergarten_participation: kg_district_with_data.fetch(district.name),
-        high_school_graduation: hs_district_with_data.fetch(district.name)})
+      unless hs_district_with_data.empty?
+        all_enrollments << Enrollment.new({name: district.name.upcase,
+          kindergarten_participation: kg_district_with_data.fetch(district.name.upcase),
+          high_school_graduation: hs_district_with_data.fetch(district.name.upcase)})
+      else
+        all_enrollments << Enrollment.new({name: district.name.upcase,
+          kindergarten_participation: kg_district_with_data.fetch(district.name.upcase)})
+      end
     end
     all_enrollments
   end
