@@ -38,8 +38,7 @@ class Enrollment
   end
 
   def kd_participation_avg_all_yrs
-    years = kindergarten_participation.values
-    years.reduce(:+) / years.count
+    compute_avg(kindergarten_participation.values)
   end
 
   def graduation_rate_by_year
@@ -47,8 +46,11 @@ class Enrollment
   end
 
   def graduation_avg_all_years
-    years = high_school_graduation.values
-    years.reduce(:+) / years.count
+    compute_avg(high_school_graduation.values)
+  end
+
+  def compute_avg(array)
+    array.reduce(:+) / array.count
   end
 
   def graduation_rate_in_year(year)
