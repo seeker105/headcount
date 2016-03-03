@@ -38,19 +38,19 @@ class HeadcountAnalyst
   def kindergarten_participation_against_high_school_graduation(name)
     kindergarten_variation = kindergarten_participation_rate_divided_by_state_avg(name)
     graduation_variation   = high_school_grad_rate_divided_by_state_avg(name)
-    kindergarten_variation / graduation_variation
+    (kindergarten_variation / graduation_variation).round(3)
   end
 
   def kindergarten_participation_rate_divided_by_state_avg(name)
     kg = @district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs
     state = @district_repo.find_by_name('COLORADO').enrollment.kd_participation_avg_all_yrs
-    kg / state
+    (kg / state).round(3)
   end
 
   def high_school_grad_rate_divided_by_state_avg(name)
     hs = @district_repo.find_by_name(name).enrollment.graduation_avg_all_years
     state = @district_repo.find_by_name('COLORADO').enrollment.graduation_avg_all_years
-    hs / state
+    (hs / state).round(3)
   end
 
 end

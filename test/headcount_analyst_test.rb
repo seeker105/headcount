@@ -54,7 +54,7 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_it_returns_the_kindergarten_participation_rate_trend
-    # skip
+    skip
     district_repo  = DistrictRepository.new
     district_repo.load_data(:enrollment => {
       :kindergarten => "./data/Kindergartners in full-day program.csv",
@@ -64,7 +64,8 @@ class HeadcountAnalystTest < Minitest::Test
     # binding.pry
     ha = HeadcountAnalyst.new(district_repo)
     submitted = ha.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
-    expected  = 1.234
+    # expected  = 1.234
+    expected  = 0.641
     assert_equal expected, submitted
   end
 
