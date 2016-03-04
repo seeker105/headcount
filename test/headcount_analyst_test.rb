@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 require 'pry'
 require 'minitest/autorun'
 require 'minitest/pride'
@@ -36,14 +38,6 @@ class HeadcountAnalystTest < Minitest::Test
     # skip
     submitted = @h_analyst.kindergarten_participation_rate_variation("GUNNISON WATERSHED RE1J", :against => "TELLURIDE R-1")
     expected  = 1.126
-
-    assert_equal expected, submitted
-  end
-
-  def test_it_returns_the_kindergarten_participation_rate_variation_trend
-    skip
-    submitted = @h_analyst.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'YUMA SCHOOL DISTRICT 1')
-    expected  = {2010=>0.611, 2011=>0.525, 2012=>0.384}
 
     assert_equal expected, submitted
   end
