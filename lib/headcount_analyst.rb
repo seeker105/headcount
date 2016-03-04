@@ -68,11 +68,12 @@ class HeadcountAnalyst
         compare_district_to_state_avg(district.name)
       end
 
-      final = t_f_all.select do |bool|
-        bool == true
-      end.count
+      # final = t_f_all.select do |bool|
+      #   bool == true
+      # end.count
+      # final > 127
 
-      final > 127
+      t_f_all.count { |bool| bool == true } > (t_f_all.count * 0.70)
 
     elsif for_hash.has_key?(:for)
       compare_district_to_state_avg(for_hash[:for])
