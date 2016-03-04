@@ -22,32 +22,22 @@ class DataManager
 
   def load_data(data_hash)
     data_hash.each_value do |value|
-      # enrollment route vs statewide route
       parse_loaded_data(value)
     end
   end
 
   def parse_loaded_data(data_hash)
-    data_hash.each_value do |value|
-      parse_csv_data(value)
+    data_hash.each_pair do |name, file|
+      parse_csv_data(name, file)
     end
   end
 
-  # def parse_loaded_data(data_hash)
-  #   data_hash.each_pair do |key, value|
-  #     parse_csv_data(value)
-  #   end
-  # end
-
-  def parse_csv_data(file)
+  def parse_csv_data(name, file)
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
       create_districts(row)
-      if file == "./data/Kindergartners in full-day program.csv"
-        collect_kg_participation_data(row)
-      else
-        collect_hs_graduation_data(row)
-      end
+
+      collect_data(data_collection_map[name], row)
     end
   end
 
@@ -71,19 +61,16 @@ class DataManager
     all_enrollments
   end
 
-  def collect_kg_participation_data(row)
-    unless kg_district_with_data.has_key?(row[:location].upcase)
-      kg_district_with_data[row[:location].upcase] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
-    else
-      kg_district_with_data.fetch(row[:location].upcase).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
-    end
+  def data_collection_map
+    {:kindergarten => kg_district_with_data,
+     :high_school_graduation => hs_district_with_data}
   end
 
-  def collect_hs_graduation_data(row)
-    unless hs_district_with_data.has_key?(row[:location].upcase)
-      hs_district_with_data[row[:location].upcase] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
+  def collect_data(group, row)
+    unless group.has_key?(row[:location].upcase)
+      group[row[:location].upcase] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
     else
-      hs_district_with_data.fetch(row[:location].upcase).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
+      group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
     end
   end
 
