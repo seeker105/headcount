@@ -61,24 +61,25 @@ class HeadcountAnalyst
     (0.6..1.5).member?(var)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(for_hash)
-    if for_hash.has_value?('STATEWIDE')
+  def correlation_found?(array)
+    # do we even need '=='?
+    array.count { |bool| bool == true } > (array.count * 0.70)
+  end
 
-      t_f_all = district_repo.districts.map do |district|
-        compare_district_to_state_avg(district.name)
+  def kindergarten_participation_correlates_with_high_school_graduation(for_hash)
+    if for_hash.has_key?(:for)
+
+      if for_hash[:for] == 'STATEWIDE'
+        t_f_all = district_repo.districts.map do |district|
+          compare_district_to_state_avg(district.name)
+        end
+        t_f_all.count { |bool| bool == true } > (t_f_all.count * 0.70)
+
+      else
+        compare_district_to_state_avg(for_hash[:for])
       end
 
-      # final = t_f_all.select do |bool|
-      #   bool == true
-      # end.count
-      # final > 127
-
-      t_f_all.count { |bool| bool == true } > (t_f_all.count * 0.70)
-
-    elsif for_hash.has_key?(:for)
-      compare_district_to_state_avg(for_hash[:for])
-
-    elsif for_hash.has_key?(:across)
+    else
       var = for_hash[:across].map do |district|
         district_repo.find_by_name(district).enrollment.graduation_avg_all_years
       end.reduce(:+) / for_hash[:across].count
@@ -86,5 +87,40 @@ class HeadcountAnalyst
     end
 
   end
+
+  # def kindergarten_participation_correlates_with_high_school_graduation(for_hash)
+  #   # if for_hash.has_key[:for]
+  #     # unless value == 'STATEWIDE'
+  #       # standard :for search
+  #     # else
+  #     # => STATEWIDE search
+  #   #else
+  #     # across search
+  #   #end
+  #
+  #   if for_hash.has_value?('STATEWIDE')
+  #
+  #     t_f_all = district_repo.districts.map do |district|
+  #       compare_district_to_state_avg(district.name)
+  #     end
+  #
+  #     # final = t_f_all.select do |bool|
+  #     #   bool == true
+  #     # end.count
+  #     # final > 127
+  #
+  #     t_f_all.count { |bool| bool == true } > (t_f_all.count * 0.70)
+  #
+  #   elsif for_hash.has_key?(:for)
+  #     compare_district_to_state_avg(for_hash[:for])
+  #
+  #   elsif for_hash.has_key?(:across)
+  #     var = for_hash[:across].map do |district|
+  #       district_repo.find_by_name(district).enrollment.graduation_avg_all_years
+  #     end.reduce(:+) / for_hash[:across].count
+  #     var > 0.7
+  #   end
+  #
+  # end
 
 end
