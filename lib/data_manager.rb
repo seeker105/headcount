@@ -36,7 +36,6 @@ class DataManager
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
       create_districts(row)
-
       collect_data(data_collection_map[name], row)
     end
   end
@@ -68,9 +67,11 @@ class DataManager
 
   def collect_data(group, row)
     unless group.has_key?(row[:location].upcase)
-      group[row[:location].upcase] = {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
+      group[row[:location].upcase] =
+        {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
     else
-      group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
+      group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
+         format_percentage(row[:data].to_f)})
     end
   end
 
