@@ -27,7 +27,7 @@ class StatewideTestTest < Minitest::Test
     end
   end
 
-  def test_proficient_by_grade_returns_hash_of_all_grade_data
+  def test_proficient_by_grade_returns_hash_of_all_third_grade_data
     submitted = @stw_test.proficient_by_grade(3)
     expected  = {2008 => {:math=>0.697, :reading=>0.703, :writing=>0.501},
                  2009 => {:math=>0.691, :reading=>0.726, :writing=>0.536},
@@ -36,6 +36,19 @@ class StatewideTestTest < Minitest::Test
                  2012 => {:reading=>0.739, :math=>0.71, :writing=>0.525},
                  2013 => {:math=>0.722, :reading=>0.732, :writing=>0.509},
                  2014 => {:math=>0.715, :reading=>0.715, :writing=>0.510}}
+
+    assert_equal expected, submitted
+  end
+
+  def test_proficient_by_grade_returns_hash_of_all_eighth_grade_data
+    submitted = @stw_test.proficient_by_grade(8)
+    expected  = {2008 => {:math=>0.469, :reading=>0.703, :writing=>0.529},
+                 2009 => {:math=>0.499, :reading=>0.726, :writing=>0.528},
+                 2010 => {:math=>0.51, :reading=>0.679, :writing=>0.549},
+                 2011 => {:reading=>0.67, :math=>0.513, :writing=>0.543},
+                 2012 => {:math=>0.515, :writing=>0.548, :reading=>0.671},
+                 2013 => {:math=>0.514, :reading=>0.668, :writing=>0.557},
+                 2014 => {:math=>0.523, :reading=>0.663, :writing=>0.561}}
 
     assert_equal expected, submitted
   end
