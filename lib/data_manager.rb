@@ -94,12 +94,12 @@ class DataManager
   end
 
   def collect_statewide_test_data(group, row)
-    data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => row[:data].to_f}}
+    data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => format_percentage(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
     else
       unless group.dig(row[:location].upcase, row[:timeframe].to_i).nil?
-        group.dig(row[:location].upcase, row[:timeframe].to_i).merge!({row[:score].downcase.to_sym => row[:data].to_f})
+        group.dig(row[:location].upcase, row[:timeframe].to_i).merge!({row[:score].downcase.to_sym => format_percentage(row[:data].to_f)})
       else
         group.fetch(row[:location].upcase).merge!(data_format)
       end
