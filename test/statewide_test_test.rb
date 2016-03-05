@@ -85,4 +85,24 @@ class StatewideTestTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+  def test_proficient_for_race_by_subject_in_year_returns_error_with_bad_subject
+    assert_raises UnknownDataError do
+      @stw_test.proficient_for_subject_by_race_in_year(:magic, :asian, 2012)
+    end
+  end
+
+  def test_proficient_for_race_by_subject_in_year_returns_error_with_bad_race
+    assert_raises UnknownRaceError do
+      @stw_test.proficient_for_subject_by_race_in_year(:math, :hobbit, 2012)
+    end
+  end
+
+  def test_proficient_for_race_by_subject_in_year
+    submitted = @stw_test.proficient_for_subject_by_race_in_year(:math, :asian, 2012)
+    expected  = 0.719
+
+    assert_equal expected, submitted
+  end
+
+
 end
