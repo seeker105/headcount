@@ -15,10 +15,11 @@ class StatewideTest
               :white]
 
   def initialize(data)
-    @data         = data
+    # @data         = data
     @name         = data[:name].upcase
     @third_grade  = data[:third_grade]
     @eighth_grade = data[:eighth_grade]
+    
     @math         = data[:math]
     @reading      = data[:reading]
     @writing      = data[:writing]

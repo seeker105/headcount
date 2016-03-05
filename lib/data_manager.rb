@@ -41,17 +41,21 @@ class DataManager
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
       create_districts(row)
-      if enrollments_map.include?(name)
-        collect_enrollments_data(enrollments_map[name], row)
-      elsif statewide_test_map.include?(name)
-        collect_statewide_test_data(statewide_test_map[name], row)
-      end
+      create_repos(name, row)
     end
   end
 
   def create_districts(row)
     unless all_districts.any? {|district| district.name == row[:location].upcase}
       all_districts << District.new({name: row[:location].upcase})
+    end
+  end
+
+  def create_repos(name, row)
+    if enrollments_map.include?(name)
+      collect_enrollments_data(enrollments_map[name], row)
+    elsif statewide_test_map.include?(name)
+      collect_statewide_test_data(statewide_test_map[name], row)
     end
   end
 
@@ -93,7 +97,6 @@ class DataManager
     data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => row[:data].to_f}}
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
-
     else
       unless group.dig(row[:location].upcase, row[:timeframe].to_i).nil?
         group.dig(row[:location].upcase, row[:timeframe].to_i).merge!({row[:score].downcase.to_sym => row[:data].to_f})
@@ -103,18 +106,26 @@ class DataManager
     end
   end
 
+  # def create_stw_tests
+  #   all_districts.each do |district|
+  #     unless eighth_grade_data.empty?
+  #       all_stw_tests << StatewideTest.new({name: district.name.upcase,
+  #         third_grade: third_grade_data.fetch(district.name.upcase),
+  #         eighth_grade: eighth_grade_data.fetch(district.name.upcase)})
+  #     else
+  #       all_stw_tests << StatewideTest.new({name: district.name.upcase,
+  #         third_grade: third_grade_data.fetch(district.name.upcase)})
+  #     end
+  #   end
+  #   all_stw_tests
+  # end
+
   def create_stw_tests
-    all_districts.each do |district|
-      unless eighth_grade_data.empty?
-        all_stw_tests << StatewideTest.new({name: district.name.upcase,
-          third_grade: third_grade_data.fetch(district.name.upcase),
-          eighth_grade: eighth_grade_data.fetch(district.name.upcase)})
-      else
-        all_stw_tests << StatewideTest.new({name: district.name.upcase,
-          third_grade: third_grade_data.fetch(district.name.upcase)})
-      end
+    all_stw_tests = all_districts.map do |district|
+      StatewideTest.new({name: district.name.upcase,
+        third_grade: third_grade_data.fetch(district.name.upcase),
+        eighth_grade: eighth_grade_data.fetch(district.name.upcase)})
     end
-    all_stw_tests
   end
 
 end
