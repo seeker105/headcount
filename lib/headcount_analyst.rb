@@ -56,71 +56,41 @@ class HeadcountAnalyst
     (kindergarten_variation / graduation_variation).round(3)
   end
 
-  def compare_district_to_state_avg(name)
+  def compare_multiple_districts_to_state_avg(districts)
+    districts.map do |district|
+      district = district.name if district.class == District
+      compare_single_district_to_state_avg(district)
+    end
+  end
+
+  def compare_single_district_to_state_avg(name)
     var = kindergarten_participation_against_high_school_graduation(name)
-    (0.6..1.5).member?(var)
+    within_range?(var)
+  end
+
+  def within_range?(num)
+    (0.6...1.5).member?(num)
   end
 
   def correlation_found?(array)
-    # do we even need '=='?
-    array.count { |bool| bool == true } > (array.count * 0.70)
+    array.count { |bool| bool } > (array.count * 0.70)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(for_hash)
-    if for_hash.has_key?(:for)
+  def check_correlation(districts)
+    bools = compare_multiple_districts_to_state_avg(districts)
+    correlation_found?(bools)
+  end
 
-      if for_hash[:for] == 'STATEWIDE'
-        t_f_all = district_repo.districts.map do |district|
-          compare_district_to_state_avg(district.name)
-        end
-        t_f_all.count { |bool| bool == true } > (t_f_all.count * 0.70)
-
+  def kindergarten_participation_correlates_with_high_school_graduation(input)
+    if input.has_key?(:for)
+      if input[:for] == 'STATEWIDE'
+        check_correlation(district_repo.districts)
       else
-        compare_district_to_state_avg(for_hash[:for])
+        compare_single_district_to_state_avg(input[:for])
       end
-
     else
-      var = for_hash[:across].map do |district|
-        district_repo.find_by_name(district).enrollment.graduation_avg_all_years
-      end.reduce(:+) / for_hash[:across].count
-      var > 0.7
+      check_correlation(input[:across])
     end
-
   end
-
-  # def kindergarten_participation_correlates_with_high_school_graduation(for_hash)
-  #   # if for_hash.has_key[:for]
-  #     # unless value == 'STATEWIDE'
-  #       # standard :for search
-  #     # else
-  #     # => STATEWIDE search
-  #   #else
-  #     # across search
-  #   #end
-  #
-  #   if for_hash.has_value?('STATEWIDE')
-  #
-  #     t_f_all = district_repo.districts.map do |district|
-  #       compare_district_to_state_avg(district.name)
-  #     end
-  #
-  #     # final = t_f_all.select do |bool|
-  #     #   bool == true
-  #     # end.count
-  #     # final > 127
-  #
-  #     t_f_all.count { |bool| bool == true } > (t_f_all.count * 0.70)
-  #
-  #   elsif for_hash.has_key?(:for)
-  #     compare_district_to_state_avg(for_hash[:for])
-  #
-  #   elsif for_hash.has_key?(:across)
-  #     var = for_hash[:across].map do |district|
-  #       district_repo.find_by_name(district).enrollment.graduation_avg_all_years
-  #     end.reduce(:+) / for_hash[:across].count
-  #     var > 0.7
-  #   end
-  #
-  # end
 
 end

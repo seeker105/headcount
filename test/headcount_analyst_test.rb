@@ -42,4 +42,12 @@ class HeadcountAnalystTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+  def test_kindergarten_participation_correlates_with_high_school_graduation
+    # skip
+    array     = ['ACADEMY 20', 'AGATE 300', 'CHERAW 31']
+    submitted = @h_analyst.kindergarten_participation_correlates_with_high_school_graduation(across: array)
+
+    refute submitted
+  end
+
 end
