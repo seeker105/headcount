@@ -15,6 +15,7 @@ class StatewideTest
               :white]
 
   def initialize(data)
+    @data         = data
     @name         = data[:name].upcase
     @third_grade  = data[:third_grade]
     @eighth_grade = data[:eighth_grade]
