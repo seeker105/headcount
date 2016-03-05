@@ -5,6 +5,9 @@ require_relative '../lib/custom_errors'
 class StatewideTest
   include CleanData
 
+  attr_reader :name, :third_grade, :eighth_grade,
+              :math, :reading, :writing
+
   GRADE    = [3, 8]
   SUBJECTS = [:math, :reading, :writing]
   RACES    = [:asian, :black, :pacific_islander,
@@ -23,8 +26,8 @@ class StatewideTest
   def proficient_by_grade(grade)
     raise UnknownDataError unless GRADE.member?(grade)
     case grade
-    when 3 then @third_grade
-    when 8 then @eighth_grade
+    when 3 then third_grade
+    when 8 then eighth_grade
     end
   end
 

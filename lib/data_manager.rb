@@ -4,14 +4,14 @@ require_relative '../lib/district_repository'
 require_relative '../lib/enrollment_repository'
 require_relative '../lib/district'
 require_relative '../lib/enrollment'
-
 require_relative '../lib/clean_data'
 
 
 class DataManager
   include CleanData
 
-  attr_reader :all_districts, :all_enrollments, :kg_district_with_data, :hs_district_with_data
+  attr_reader :all_districts, :all_enrollments,
+              :kg_district_with_data, :hs_district_with_data
 
   def initialize
     @all_districts = []
@@ -36,7 +36,7 @@ class DataManager
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
       create_districts(row)
-      collect_data(data_collection_map[name], row)
+      collect_enrollments_data(enrollments_map[name], row)
     end
   end
 
@@ -60,12 +60,12 @@ class DataManager
     all_enrollments
   end
 
-  def data_collection_map
+  def enrollments_map
     {:kindergarten => kg_district_with_data,
      :high_school_graduation => hs_district_with_data}
   end
 
-  def collect_data(group, row)
+  def collect_enrollments_data(group, row)
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] =
         {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
