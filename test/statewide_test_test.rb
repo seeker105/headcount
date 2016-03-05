@@ -68,7 +68,20 @@ class StatewideTestTest < Minitest::Test
                 2012 => {:math=>0.719, :reading=>0.757, :writing=>0.658},
                 2013 => {:math=>0.732, :reading=>0.769, :writing=>0.682},
                 2014 => {:math=>0.734, :reading=>0.769, :writing=>0.684}}
-                
+
+    assert_equal expected, submitted
+  end
+
+  def test_proficient_for_subject_by_grade_in_year_returns_error_with_bad_subject
+    assert_raises UnknownDataError do
+      @stw_test.proficient_for_subject_by_grade_in_year(:science, 8, 2010)
+    end
+  end
+
+  def test_proficient_for_subject_by_grade_in_year
+    submitted = @stw_test.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
+    expected  = 0.697
+
     assert_equal expected, submitted
   end
 
