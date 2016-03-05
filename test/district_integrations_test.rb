@@ -24,7 +24,7 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
         })
 
     submitted = district_repo.find_by_name("ACADEMY 20")
-    binding.pry
+    # binding.pry
 
     assert_equal 0.436, submitted.enrollment.kindergarten_participation_in_year(2010)
   end

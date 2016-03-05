@@ -19,19 +19,17 @@ class DistrictRepository
     data_manager.load_data(data)
     populate_district_repo
 
+    # populate_enrollment_repo({data.flatten[0] => data.flatten[1]})
+    # populate_statewide_test_repo({data.flatten[2] => data.flatten[3]})
 
-    populate_enrollment_repo({data.flatten[0] => data.flatten[1]})
-    populate_statewide_test_repo({data.flatten[2] => data.flatten[3]})
-
-    # data.each do |pair|
-    #   binding.pry
-    #   if key == :enrollment
-    #     binding.pry
-    #     populate_enrollment_repo(data.first)
-    #   elsif key == :statewide_testing
-    #     populate_statewide_test_repo(data.last)
-    #   end
-    # end
+    # binding.pry
+    data.each_key do |key|
+      if key == :enrollment
+        populate_enrollment_repo({key => data[key]})
+      elsif key == :statewide_testing
+        populate_statewide_test_repo({key => data[key]})
+      end
+    end
 
     # binding.pry
     load_relationships
