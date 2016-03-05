@@ -8,6 +8,7 @@ require_relative '../lib/enrollment_repository'
 require_relative '../lib/district'
 require_relative '../lib/enrollment'
 require_relative '../lib/headcount_analyst'
+require_relative '../lib/custom_errors'
 
 class HeadcountAnalystTest < Minitest::Test
 

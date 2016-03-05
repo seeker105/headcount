@@ -1,8 +1,15 @@
 require 'pry'
 require_relative '../lib/clean_data'
+require_relative '../lib/custom_errors'
 
 class StatewideTest
   include CleanData
+
+  GRADE    = [3, 8]
+  SUBJECTS = [:math, :reading, :writing]
+  RACES    = [:asian, :black, :pacific_islander,
+              :hispanic, :native_american, :two_or_more,
+              :white]
 
   def initialize(data)
     @name         = data[:name].upcase
@@ -11,16 +18,10 @@ class StatewideTest
     @math         = data[:math]
     @reading      = data[:reading]
     @writing      = data[:writing]
-
-    @subjects     = [:math, :reading, :writing]
-    @races = [:asian, :black, :pacific_islander,
-              :hispanic, :native_american, :two_or_more,
-              :white]
   end
 
   def proficient_by_grade(grade)
-    # raise UnknownDataError unless [3, 8].member?(grade)
-    raise ArgumentError unless [3, 8].member?(grade)
+    raise UnknownDataError unless GRADE.member?(grade)
     case grade
     when 3
       @third_grade
@@ -30,12 +31,12 @@ class StatewideTest
   end
 
   def proficient_by_race_or_ethnicity(race)
-    raise ArgumentError unless @races.member?(race)
+    raise UnknownRaceError unless RACES.member?(race)
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
-    raise ArgumentError unless @subjects.member?(subject)
-    raise ArgumentError unless [3, 8].member?(grade)
+    raise UnknownDataError unless SUBJECTS.member?(subject)
+    raise UnknownDataError unless GRADE.member?(grade)
 
   end
 

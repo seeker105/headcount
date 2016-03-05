@@ -22,7 +22,7 @@ class StatewideTestTest < Minitest::Test
 
   def test_proficient_by_grade_returns_error_with_unknown_grade
     # needs to be UnknownDataError
-    assert_raises ArgumentError do
+    assert_raises UnknownDataError do
       @stw_test.proficient_by_grade(2)
     end
   end
@@ -35,8 +35,7 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_proficient_by_race_or_ethnicity_returns_error_with_unknown_race
-    # needs to be UnknownRaceError
-    assert_raises ArgumentError do
+    assert_raises UnknownRaceError do
       @stw_test.proficient_by_race_or_ethnicity(:Hobbit)
     end
   end
