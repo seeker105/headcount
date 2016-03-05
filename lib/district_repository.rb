@@ -33,6 +33,7 @@ class DistrictRepository
 
   def load_relationships
     load_enrollments
+    load_statewide_tests
   end
 
   def populate_district_repo
@@ -58,6 +59,12 @@ class DistrictRepository
   def load_enrollments
     @districts.each do |district|
       district.enrollment = @enrollment_repo.find_by_name(district.name)
+    end
+  end
+
+  def load_statewide_tests
+    @districts.each do |district|
+      district.statewide_test = @statewide_test_repo.find_by_name(district.name)
     end
   end
 

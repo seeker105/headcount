@@ -15,4 +15,8 @@ class StatewideTestRepository
     @stw_tests = data_manager.create_stw_tests
   end
 
+  def find_by_name(name)
+    @stw_tests.find { |stw_test| stw_test.name == name.upcase }
+  end
+
 end
