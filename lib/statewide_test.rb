@@ -6,15 +6,36 @@ class StatewideTest
 
   def initialize(data)
     @name         = data[:name].upcase
-    @third_grade  = clean_data(data[:third_grade])
-    @eighth_grade = clean_data(data[:eighth_grade])
-    @math         = clean_data(data[:math])
-    @reading      = clean_data(data[:reading])
-    @writing      = clean_data(data[:writing])
+    @third_grade  = data[:third_grade]
+    @eighth_grade = data[:eighth_grade]
+    @math         = data[:math]
+    @reading      = data[:reading]
+    @writing      = data[:writing]
+
+    @subjects     = [:math, :reading, :writing]
+    @races = [:asian, :black, :pacific_islander,
+              :hispanic, :native_american, :two_or_more,
+              :white]
   end
 
   def proficient_by_grade(grade)
-    raise UnknownDataError unless [3, 8].member?(grade)
+    # raise UnknownDataError unless [3, 8].member?(grade)
+    raise ArgumentError unless [3, 8].member?(grade)
+    case grade
+    when 3
+      @third_grade
+    when 8
+      @eighth_grade
+    end
+  end
+
+  def proficient_by_race_or_ethnicity(race)
+    raise ArgumentError unless @races.member?(race)
+  end
+
+  def proficient_for_subject_by_grade_in_year(subject, grade, year)
+    raise ArgumentError unless @subjects.member?(subject)
+    raise ArgumentError unless [3, 8].member?(grade)
 
   end
 
