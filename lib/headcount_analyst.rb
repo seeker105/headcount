@@ -51,10 +51,11 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(name)
-    kindergarten_variation = kindergarten_participation_rate_divided_by_state_avg(name)
-    graduation_variation   = high_school_grad_rate_divided_by_state_avg(name)
-    (kindergarten_variation / graduation_variation).round(3)
+    kinder_var = kindergarten_participation_rate_divided_by_state_avg(name)
+    grad_var   = high_school_grad_rate_divided_by_state_avg(name)
+    (kinder_var / grad_var).round(3)
   end
+
 
   def compare_multiple_districts_to_state_avg(districts)
     districts.map do |district|
@@ -82,14 +83,10 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(input)
-    if input.has_key?(:for)
-      if input[:for] == 'STATEWIDE'
-        check_correlation(district_repo.districts)
-      else
-        compare_single_district_to_state_avg(input[:for])
-      end
+    if input.has_value?('STATEWIDE')
+      check_correlation(district_repo.districts)
     else
-      check_correlation(input[:across])
+      check_correlation(input.values.flatten)
     end
   end
 
