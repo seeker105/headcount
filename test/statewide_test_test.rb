@@ -9,12 +9,15 @@ require_relative '../lib/statewide_test'
 class StatewideTestTest < Minitest::Test
 
   def setup
-    stw_test_repo = StatewideTestRepository.new
-    stw_test_repo.load_data({ :statewide_testing => {
+    @stw_test_repo = StatewideTestRepository.new
+    @stw_test_repo.load_data({ :statewide_testing => {
       :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv"}
+      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"}
       })
-    @stw_test = stw_test_repo.stw_tests.first
+    @stw_test = @stw_test_repo.stw_tests.first
   end
 
   def test_can_create_statewidetest_object
@@ -60,7 +63,13 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_proficient_by_race_or_ethnicity_returns_race_specific_data
-    skip
+    submitted = @stw_test.proficient_by_race_or_ethnicity(:asian)
+    expected = {2011 => {:math=>0.709, :reading=>0.748, :writing=>0.656},
+                2012 => {:math=>0.719, :reading=>0.757, :writing=>0.658},
+                2013 => {:math=>0.732, :reading=>0.769, :writing=>0.682},
+                2014 => {:math=>0.734, :reading=>0.769, :writing=>0.684}}
+                
+    assert_equal expected, submitted
   end
 
 end

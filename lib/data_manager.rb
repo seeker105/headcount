@@ -12,7 +12,8 @@ class DataManager
 
   attr_reader :all_districts, :all_enrollments, :all_stw_tests,
               :kg_district_with_data, :hs_district_with_data,
-              :third_grade_data, :eighth_grade_data, :math, :reading, :writing
+              :third_grade_data, :eighth_grade_data,
+              :math_data, :reading_data, :writing_data
 
   def initialize
     @all_districts = []
@@ -21,8 +22,13 @@ class DataManager
 
     @kg_district_with_data = {}
     @hs_district_with_data = {}
+
     @third_grade_data = {}
     @eighth_grade_data = {}
+
+    @math_data = {}
+    @reading_data = {}
+    @writing_data = {}
   end
 
   def load_data(data_hash)
@@ -41,7 +47,7 @@ class DataManager
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
       create_districts(row)
-      create_repos(name, row)
+      create_repos(file, name, row)
     end
   end
 
@@ -51,11 +57,13 @@ class DataManager
     end
   end
 
-  def create_repos(name, row)
+  def create_repos(file, name, row)
     if enrollments_map.include?(name)
       collect_enrollments_data(enrollments_map[name], row)
     elsif statewide_test_map.include?(name)
-      collect_statewide_test_data(statewide_test_map[name], row)
+      collect_statewide_grade_data(statewide_test_map[name], row)
+    elsif statewide_race_map.include?(name)
+      collect_statewide_race_data(file, statewide_race_map[name], row)
     end
   end
 
@@ -93,7 +101,7 @@ class DataManager
       # math: math_data, reading: reading_data, writing: writing_data}
   end
 
-  def collect_statewide_test_data(group, row)
+  def collect_statewide_grade_data(group, row)
     data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => format_percentage(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
@@ -105,6 +113,29 @@ class DataManager
       end
     end
   end
+
+  def statewide_race_map
+    {math: math_data, reading: reading_data, writing: writing_data}
+  end
+
+  def collect_statewide_race_data(file, group, row)
+    # binding.pry
+    data_format = {format_string_to_key(row[:race_ethnicity]) => {row[:timeframe].to_i => format_percentage(row[:data].to_f)}}
+    unless group.has_key?(row[:location].upcase)
+      group[row[:location].upcase] = data_format
+    else
+      unless group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).nil?
+        group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
+      else
+        group.fetch(row[:location].upcase).merge!(data_format)
+      end
+    end
+  end
+
+  def format_string_to_key(string)
+    string.gsub("Hawaiian/", "").gsub(" ", "_").downcase.to_sym
+  end
+
 
   # def create_stw_tests
   #   all_districts.each do |district|
@@ -124,7 +155,11 @@ class DataManager
     all_stw_tests = all_districts.map do |district|
       StatewideTest.new({name: district.name.upcase,
         third_grade: third_grade_data.fetch(district.name.upcase),
-        eighth_grade: eighth_grade_data.fetch(district.name.upcase)})
+        eighth_grade: eighth_grade_data.fetch(district.name.upcase),
+        math: math_data.fetch(district.name.upcase),
+        reading: reading_data.fetch(district.name.upcase),
+        writing: writing_data.fetch(district.name.upcase)
+      })
     end
   end
 
