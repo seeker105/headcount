@@ -44,5 +44,9 @@ class EconomicProfile
     @free_or_reduced_price_lunch.fetch(year)[:total]
   end
 
+  def title_i_in_year(year)
+    raise UnknownDataError unless @title_i.has_key?(year)
+    @title_i.fetch(year)
+  end
 
 end
