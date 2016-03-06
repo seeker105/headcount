@@ -33,6 +33,7 @@ class DistrictRepository
   def load_relationships
     load_enrollments
     load_statewide_tests
+    load_economic_profiles
   end
 
   def populate_district_repo
@@ -56,6 +57,12 @@ class DistrictRepository
   def load_statewide_tests
     @districts.each do |district|
       district.statewide_test = @statewide_test_repo.find_by_name(district.name)
+    end
+  end
+
+  def load_economic_profiles
+    @districts.each do |district|
+      district.economic_profile = @economic_profile_repo.find_by_name(district.name)
     end
   end
 
