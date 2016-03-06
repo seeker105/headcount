@@ -15,7 +15,6 @@ class StatewideTest
               :white]
 
   def initialize(data)
-    # @data         = data
     @name         = data[:name].upcase
     @third_grade  = data[:third_grade]
     @eighth_grade = data[:eighth_grade]
@@ -42,15 +41,15 @@ class StatewideTest
     reading = create_year_subject_data_hash(@reading, race, :reading)
     writing = create_year_subject_data_hash(@writing, race, :writing)
 
-    result = {}
-    math.each_key do |key|
+    math.each_key.with_object({}) do |key, result|
       result[key] = (math[key].merge(reading[key])).merge(writing[key])
     end
-    result
   end
 
   def create_year_subject_data_hash(var, race, symbol)
-    var.fetch(race).each_with_object([]) { |(k, v), array| array << [k, {symbol => v}] }.to_h
+    var.fetch(race).each_with_object([]) do |(k, v), array|
+      array << [k, {symbol => v}]
+    end.to_h
   end
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
