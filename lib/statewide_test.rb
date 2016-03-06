@@ -36,11 +36,9 @@ class StatewideTest
 
   def proficient_by_race_or_ethnicity(race)
     raise UnknownRaceError unless RACES.member?(race)
-
-    math = create_year_subject_data_hash(@math, race, :math)
+    math    = create_year_subject_data_hash(@math, race, :math)
     reading = create_year_subject_data_hash(@reading, race, :reading)
     writing = create_year_subject_data_hash(@writing, race, :writing)
-
     math.each_key.with_object({}) do |key, result|
       result[key] = (math[key].merge(reading[key])).merge(writing[key])
     end
