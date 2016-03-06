@@ -25,4 +25,8 @@ class EconomicProfile
     collection.reduce(:+) / collection.length
   end
 
+  def median_household_income_average
+    calc_average(@median_household_income.values)
+  end
+
 end
