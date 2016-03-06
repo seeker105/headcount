@@ -5,7 +5,8 @@ require_relative '../lib/statewide_test_repository'
 require_relative '../lib/economic_profile_repository'
 
 class DistrictRepository
-  attr_reader :data_manager, :enrollment_repo, :statewide_test_repo, :economic_profile_repo
+  attr_reader :data_manager, :enrollment_repo,
+              :statewide_test_repo, :economic_profile_repo
   attr_accessor :districts
 
   def initialize
@@ -16,21 +17,16 @@ class DistrictRepository
     @economic_profile_repo = EconomicProfileRepository.new
   end
 
+  def load_map
+    {enrollment: enrollment_repo,
+     statewide_testing: statewide_test_repo,
+     economic_profile: economic_profile_repo}
+  end
+
   def load_data(data)
     data_manager.load_data(data)
     populate_district_repo
-
-    data.each_key do |key|
-      if key == :enrollment
-        populate_enrollment_repo({key => data[key]})
-      elsif key == :statewide_testing
-        populate_statewide_test_repo({key => data[key]})
-      elsif key == :economic_profile
-        populate_economic_profile_repo({key => data[key]})
-      end
-    end
-
-    binding.pry
+    data.each_key { |key| load_map[key].load_data({key => data[key]}) }
     load_relationships
   end
 
@@ -41,18 +37,6 @@ class DistrictRepository
 
   def populate_district_repo
     @districts = data_manager.all_districts
-  end
-
-  def populate_enrollment_repo(data)
-    @enrollment_repo.load_data(data)
-  end
-
-  def populate_statewide_test_repo(data)
-    @statewide_test_repo.load_data(data)
-  end
-
-  def populate_economic_profile_repo(data)
-    @economic_profile_repo.load_data(data)
   end
 
   def find_by_name(name)

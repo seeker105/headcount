@@ -160,8 +160,6 @@ class DataManager
   end
 
   def collect_economic_profile_data(file, group, row)
-    # binding.pry
-
     if file.include?('Median')
       collect_median_household_income_data(group, row)
     elsif file.include?('lunch')
@@ -182,10 +180,8 @@ class DataManager
   end
 
   def collect_reduced_price_lunch_data(group, row)
-    # {2014 => {:percentage => 0.023, :total => 100}}
     if row[:poverty_level] == "Eligible for Free or Reduced Lunch"
       if row[:dataformat] == "Percent"
-        # binding.pry
         unless group.has_key?(row[:location].upcase)
           group[row[:location].upcase] =
             {row[:timeframe].to_i => {percentage: format_percentage(row[:data].to_f),
@@ -196,7 +192,6 @@ class DataManager
              total: group.dig(row[:location].upcase, row[:timeframe].to_i, :total)}})
         end
       else
-        # binding.pry
         unless group.has_key?(row[:location].upcase)
           group[row[:location].upcase] =
             {row[:timeframe].to_i => {percentage: 0,
@@ -220,7 +215,6 @@ class DataManager
         title_i: title_i_data.fetch(district.name.upcase)
         })
       end
-      binding.pry
     end
 
 
