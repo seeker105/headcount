@@ -39,6 +39,10 @@ class EconomicProfile
     @free_or_reduced_price_lunch.fetch(year)[:percentage]
   end
 
-  
+  def free_or_reduced_price_lunch_number_in_year(year)
+    raise UnknownDataError unless @free_or_reduced_price_lunch.has_key?(year)
+    @free_or_reduced_price_lunch.fetch(year)[:total]
+  end
+
 
 end
