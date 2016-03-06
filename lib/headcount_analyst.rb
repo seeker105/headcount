@@ -98,10 +98,49 @@ class HeadcountAnalyst
       "#{args[:grade]} is not a known grade" unless GRADE.include?(args[:grade])
 
     unless args.has_key?(:top)
-      
+      if args[:grade] == 3
+        ex = district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
+          relevant = stw_test.third_grade.clone
+          relevant.delete_if { |key, value| value.dig(args[:subject]) == 0.0 }
 
-    binding.pry
-    # iteration 5 method
+          if relevant.length > 1
+            part_one = relevant.dig(relevant.keys.max, args[:subject]) - relevant.dig(relevant.keys.min, args[:subject])
+            part_two = (relevant.keys.max - relevant.keys.min)
+
+            final = format_pct(part_one / part_two)
+            [stw_test.name, final]
+          else
+            [stw_test.name, 0.0]
+          end
+
+        end
+        ex.max_by { |data| data.last }
+
+      elsif args[:grade] == 8
+        ex = district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
+          relevant = stw_test.eighth_grade.clone
+          relevant.delete_if { |key, value| value.dig(args[:subject]) == 0.0 }
+
+          if relevant.length > 1
+            part_one = relevant.dig(relevant.keys.max, args[:subject]) - relevant.dig(relevant.keys.min, args[:subject])
+            part_two = (relevant.keys.max - relevant.keys.min)
+
+            final = format_pct(part_one / part_two)
+            [stw_test.name, final]
+          # elsif relevant.length > 0
+          #   [stw_test.name, relevant.dig(relevant.keys.max, args[:subject])]
+          # elsif relevant.empty?
+          #   [stw_test.name, 0.0]
+          else
+            [stw_test.name, 0.0]
+
+          end
+        end
+        ex.max_by { |data| data.last }
+      end
+      # return [name, avg pct growth]
+    end
+
   end
 
 end
