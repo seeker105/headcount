@@ -34,4 +34,11 @@ class EconomicProfile
     @children_in_poverty.fetch(year)
   end
 
+  def free_or_reduced_price_lunch_percentage_in_year(year)
+    raise UnknownDataError unless @free_or_reduced_price_lunch.has_key?(year)
+    @free_or_reduced_price_lunch.fetch(year)[:percentage]
+  end
+
+  
+
 end
