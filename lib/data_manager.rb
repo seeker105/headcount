@@ -106,12 +106,12 @@ class DataManager
   end
 
   def collect_statewide_grade_data(group, row)
-    data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => format_percentage(row[:data].to_f)}}
+    data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => format_pct(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
     else
       unless group.dig(row[:location].upcase, row[:timeframe].to_i).nil?
-        group.dig(row[:location].upcase, row[:timeframe].to_i).merge!({row[:score].downcase.to_sym => format_percentage(row[:data].to_f)})
+        group.dig(row[:location].upcase, row[:timeframe].to_i).merge!({row[:score].downcase.to_sym => format_pct(row[:data].to_f)})
       else
         group.fetch(row[:location].upcase).merge!(data_format)
       end
@@ -123,12 +123,12 @@ class DataManager
   end
 
   def collect_statewide_race_data(file, group, row)
-    data_format = {format_string_to_key(row[:race_ethnicity]) => {row[:timeframe].to_i => format_percentage(row[:data].to_f)}}
+    data_format = {format_string_to_key(row[:race_ethnicity]) => {row[:timeframe].to_i => format_pct(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
     else
       unless group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).nil?
-        group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
+        group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).merge!({row[:timeframe].to_i => format_pct(row[:data].to_f)})
       else
         group.fetch(row[:location].upcase).merge!(data_format)
       end
@@ -184,11 +184,11 @@ class DataManager
       if row[:dataformat] == "Percent"
         unless group.has_key?(row[:location].upcase)
           group[row[:location].upcase] =
-            {row[:timeframe].to_i => {percentage: format_percentage(row[:data].to_f),
+            {row[:timeframe].to_i => {percentage: format_pct(row[:data].to_f),
                                       total: 0}}
         else
           group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-            {percentage: format_percentage(row[:data].to_f),
+            {percentage: format_pct(row[:data].to_f),
              total: group.dig(row[:location].upcase, row[:timeframe].to_i, :total)}})
         end
       else
@@ -225,10 +225,10 @@ class DataManager
   def standard_location_year_percentage_data(file, group, row)
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] =
-        {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
+        {row[:timeframe].to_i => format_pct(row[:data].to_f)}
     else
       group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-         format_percentage(row[:data].to_f)})
+         format_pct(row[:data].to_f)})
     end
   end
 

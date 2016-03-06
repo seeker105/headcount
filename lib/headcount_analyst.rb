@@ -13,11 +13,11 @@ class HeadcountAnalyst
   def kindergarten_participation_rate_variation(name, comparison)
     original = kd_participation_total_avg_for_location(name)
     compared = kd_participation_total_avg_for_location(comparison[:against])
-    format_percentage(original / compared)
+    format_pct(original / compared)
   end
 
   def kd_participation_total_avg_for_location(name)
-    format_percentage(district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs)
+    format_pct(district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs)
   end
 
   def kd_participation_avg_for_each_year(name)
@@ -32,20 +32,20 @@ class HeadcountAnalyst
 
   def years_and_variation_trends(original, compared)
     original.each_key.with_object({}) do |key, result|
-      result[key] = format_percentage(original[key] / compared[key])
+      result[key] = format_pct(original[key] / compared[key])
     end
   end
 
   def kindergarten_participation_rate_divided_by_state_avg(name)
     kg = district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs
     state = district_repo.find_by_name('COLORADO').enrollment.kd_participation_avg_all_yrs
-    format_percentage(kg / state)
+    format_pct(kg / state)
   end
 
   def high_school_grad_rate_divided_by_state_avg(name)
     hs = district_repo.find_by_name(name).enrollment.graduation_avg_all_years
     state = district_repo.find_by_name('COLORADO').enrollment.graduation_avg_all_years
-    format_percentage(hs / state)
+    format_pct(hs / state)
   end
 
   def kindergarten_participation_against_high_school_graduation(name)
