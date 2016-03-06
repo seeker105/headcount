@@ -1,9 +1,12 @@
 require 'pry'
 require 'csv'
 require_relative '../lib/clean_data'
+require_relative '../lib/statewide_categories'
 
 class HeadcountAnalyst
   include CleanData
+  include StatewideCategories
+
   attr_reader :district_repo
 
   def initialize(district_repo)
@@ -88,7 +91,16 @@ class HeadcountAnalyst
     end
   end
 
-  def top_statewide_test_year_over_year_growth(grade_and_subject)
+  def top_statewide_test_year_over_year_growth(args)
+    raise InsufficientInformationError,
+      "A grade must be provided to answer this question" unless SUBJECTS.include?(args[:subject])
+    raise UnknownDataError,
+      "#{args[:grade]} is not a known grade" unless GRADE.include?(args[:grade])
+
+    unless args.has_key?(:top)
+      
+
+    binding.pry
     # iteration 5 method
   end
 

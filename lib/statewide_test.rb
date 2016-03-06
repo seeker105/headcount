@@ -1,18 +1,14 @@
 require 'pry'
 require_relative '../lib/clean_data'
 require_relative '../lib/custom_errors'
+require_relative '../lib/statewide_categories'
 
 class StatewideTest
   include CleanData
+  include StatewideCategories
 
   attr_reader :name, :third_grade, :eighth_grade,
               :math, :reading, :writing
-
-  GRADE    = [3, 8]
-  SUBJECTS = [:math, :reading, :writing]
-  RACES    = [:asian, :black, :pacific_islander,
-              :hispanic, :native_american, :two_or_more,
-              :white]
 
   def initialize(data)
     @name         = data[:name].upcase
