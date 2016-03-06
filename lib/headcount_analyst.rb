@@ -17,7 +17,7 @@ class HeadcountAnalyst
   end
 
   def kd_participation_total_avg_for_location(name)
-    format_pct(district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs)
+    format_pct(district_repo.kd_participation_avg_all_yrs(name))
   end
 
   def kd_participation_avg_for_each_year(name)
@@ -37,14 +37,14 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_rate_divided_by_state_avg(name)
-    kg = district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs
-    state = district_repo.find_by_name('COLORADO').enrollment.kd_participation_avg_all_yrs
+    kg = district_repo.kd_participation_avg_all_yrs(name)
+    state = district_repo.kd_participation_avg_all_yrs('COLORADO')
     format_pct(kg / state)
   end
 
   def high_school_grad_rate_divided_by_state_avg(name)
-    hs = district_repo.find_by_name(name).enrollment.graduation_avg_all_years
-    state = district_repo.find_by_name('COLORADO').enrollment.graduation_avg_all_years
+    hs = district_repo.graduation_avg_all_years(name)
+    state = district_repo.graduation_avg_all_years('COLORADO')
     format_pct(hs / state)
   end
 

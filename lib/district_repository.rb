@@ -54,4 +54,12 @@ class DistrictRepository
     repo.find_by_name(district.name)
   end
 
+  def kd_participation_avg_all_yrs(name)
+    find_by_name(name).enrollment.kd_participation_avg_all_yrs
+  end
+
+  def graduation_avg_all_years(name)
+    find_by_name(name).enrollment.graduation_avg_all_years
+  end
+
 end
