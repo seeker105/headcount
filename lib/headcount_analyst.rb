@@ -92,55 +92,114 @@ class HeadcountAnalyst
   end
 
   def top_statewide_test_year_over_year_growth(args)
-    raise InsufficientInformationError,
-      "A grade must be provided to answer this question" unless SUBJECTS.include?(args[:subject])
-    raise UnknownDataError,
-      "#{args[:grade]} is not a known grade" unless GRADE.include?(args[:grade])
+    raise InsufficientInformationError unless args.has_key?(:grade)
+    raise UnknownDataError unless GRADE.include?(args[:grade])
 
-    unless args.has_key?(:top)
-      if args[:grade] == 3
-        ex = district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
-          relevant = stw_test.third_grade.clone
-          relevant.delete_if { |key, value| value.dig(args[:subject]) == 0.0 }
+    # single leader
+    # growth_for_all_tests.max_by { |data| data.last }
 
-          if relevant.length > 1
-            part_one = relevant.dig(relevant.keys.max, args[:subject]) - relevant.dig(relevant.keys.min, args[:subject])
-            part_two = (relevant.keys.max - relevant.keys.min)
+    if args.keys.length == 1
+      # all subjects
+      growth_for_all_tests = parser(args).compact
+      # binding.pry
+      growth_for_all_tests.max_by { |data| data.last}
 
-            final = format_pct(part_one / part_two)
-            [stw_test.name, final]
-          else
-            [stw_test.name, 0.0]
-          end
 
-        end
-        ex.max_by { |data| data.last }
+    elsif args.has_key?(:top)
+      growth_for_all_tests = parser(args).compact
+      growth_for_all_tests.sort_by { |data| data.last }.reverse[0..args[:top]]
 
-      elsif args[:grade] == 8
-        ex = district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
-          relevant = stw_test.eighth_grade.clone
-          relevant.delete_if { |key, value| value.dig(args[:subject]) == 0.0 }
+    elsif args.has_key?(:weighting)
+      [true, false]
 
-          if relevant.length > 1
-            part_one = relevant.dig(relevant.keys.max, args[:subject]) - relevant.dig(relevant.keys.min, args[:subject])
-            part_two = (relevant.keys.max - relevant.keys.min)
+    else
+      growth_for_all_tests = parser(args).compact
+      growth_for_all_tests.max_by { |data| data.last }
 
-            final = format_pct(part_one / part_two)
-            [stw_test.name, final]
-          # elsif relevant.length > 0
-          #   [stw_test.name, relevant.dig(relevant.keys.max, args[:subject])]
-          # elsif relevant.empty?
-          #   [stw_test.name, 0.0]
-          else
-            [stw_test.name, 0.0]
-
-          end
-        end
-        ex.max_by { |data| data.last }
-      end
+      # if args[:grade] == 3
+      #   ex = district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
+      #     relevant = stw_test.third_grade.clone
+      #     relevant.delete_if { |key, value| value.dig(args[:subject]) == 0.0 }
+      #
+      #     if relevant.length > 1
+      #       part_one = relevant.dig(relevant.keys.max, args[:subject]) - relevant.dig(relevant.keys.min, args[:subject])
+      #       part_two = (relevant.keys.max - relevant.keys.min)
+      #
+      #       final = format_pct(part_one / part_two)
+      #       [stw_test.name, final]
+      #     else
+      #       [stw_test.name, 0.0]
+      #     end
+      #
+      #   end
+      #   ex.max_by { |data| data.last }
+      #
+      # elsif args[:grade] == 8
+      #   ex = district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
+      #     relevant = stw_test.eighth_grade.clone
+      #     relevant.delete_if { |key, value| value.dig(args[:subject]) == 0.0 }
+      #
+      #     if relevant.length > 1
+      #       part_one = relevant.dig(relevant.keys.max, args[:subject]) - relevant.dig(relevant.keys.min, args[:subject])
+      #       part_two = (relevant.keys.max - relevant.keys.min)
+      #
+      #       final = format_pct(part_one / part_two)
+      #       [stw_test.name, final]
+      #     # elsif relevant.length > 0
+      #     #   [stw_test.name, relevant.dig(relevant.keys.max, args[:subject])]
+      #     # elsif relevant.empty?
+      #     #   [stw_test.name, 0.0]
+      #     else
+      #       [stw_test.name, 0.0]
+      #
+      #     end
+      #   end
+      #   ex.max_by { |data| data.last }
+      # end
       # return [name, avg pct growth]
     end
+    # binding.pry
+  end
 
+  def parser(args)
+    # binding.pry
+    district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
+      next if stw_test.name == "COLORADO"
+
+      grade = select_grade(args, stw_test)
+
+      if args.has_key?(:subject)
+        calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
+      else
+        math = calc_yr_to_yr_growth(stw_test.name, grade, :math)
+        writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
+        reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
+
+        total = math.last + writing.last + reading.last
+        # binding.pry
+        [stw_test.name, format_pct(total / 3)]
+      end
+    end
+  end
+
+  def select_grade(args, stw_test)
+    case args[:grade]
+    when 3 then stw_test.third_grade.clone
+    when 8 then stw_test.eighth_grade.clone
+    end
+  end
+
+  def calc_yr_to_yr_growth(name, grade, subject)
+    grade.delete_if { |key, value| value.dig(subject) == 0.0 }
+
+    unless grade.length < 2
+      growth_amt = grade.dig(grade.keys.max, subject) -
+        grade.dig(grade.keys.min, subject)
+      years = (grade.keys.max - grade.keys.min)
+      [name, format_pct(growth_amt / years)]
+    else
+      [name, 0.0]
+    end
   end
 
 end
