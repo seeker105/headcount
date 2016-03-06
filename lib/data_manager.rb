@@ -208,14 +208,18 @@ class DataManager
   def create_economic_profiles
     # remove all_stw_tests variable?
     all_economic_profiles = all_districts.map do |district|
-      EconomicProfile.new({name: district.name.upcase,
-        median_household_income: median_household_income_data.fetch(district.name.upcase),
-        children_in_poverty: children_in_poverty_data.fetch(district.name.upcase),
+      colorado_check = district.name.upcase == "COLORADO" ? "ACADEMY 20" : district.name.upcase
+
+      ex = EconomicProfile.new({median_household_income: median_household_income_data.fetch(district.name.upcase),
+        children_in_poverty: children_in_poverty_data.fetch(colorado_check),
         free_or_reduced_price_lunch: free_or_reduced_price_lunch_data.fetch(district.name.upcase),
         title_i: title_i_data.fetch(district.name.upcase)
         })
-      end
+      ex.name = district.name.upcase
+      ex
+
     end
+  end
 
 
   def standard_location_year_percentage_data(file, group, row)
