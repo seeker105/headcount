@@ -30,40 +30,28 @@ class DistrictRepository
     load_relationships
   end
 
-  def load_relationships
-    load_enrollments
-    load_statewide_tests
-    load_economic_profiles
-  end
-
   def populate_district_repo
     @districts = data_manager.all_districts
   end
 
   def find_by_name(name)
-    @districts.find { |district| district.name == name.upcase }
+    districts.find { |district| district.name == name.upcase }
   end
 
   def find_all_matching(name)
-    @districts.select { |district| district.name.include?(name.upcase) }
+    districts.select { |district| district.name.include?(name.upcase) }
   end
 
-  def load_enrollments
-    @districts.each do |district|
-      district.enrollment = @enrollment_repo.find_by_name(district.name)
+  def load_relationships
+    districts.each do |district|
+      district.enrollment = repo_connector(district, enrollment_repo)
+      district.statewide_test = repo_connector(district, statewide_test_repo)
+      district.economic_profile = repo_connector(district, economic_profile_repo)
     end
   end
 
-  def load_statewide_tests
-    @districts.each do |district|
-      district.statewide_test = @statewide_test_repo.find_by_name(district.name)
-    end
-  end
-
-  def load_economic_profiles
-    @districts.each do |district|
-      district.economic_profile = @economic_profile_repo.find_by_name(district.name)
-    end
+  def repo_connector(district, repo)
+    repo.find_by_name(district.name)
   end
 
 end

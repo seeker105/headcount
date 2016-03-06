@@ -53,7 +53,8 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
   end
 
   def test_economic_profile
-    binding.pry
+    skip
+    # binding.pry
 
   end
 
