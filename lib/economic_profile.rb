@@ -29,4 +29,9 @@ class EconomicProfile
     calc_average(@median_household_income.values)
   end
 
+  def children_in_poverty_in_year(year)
+    raise UnknownDataError unless @children_in_poverty.has_key?(year)
+    @children_in_poverty.fetch(year)
+  end
+
 end
