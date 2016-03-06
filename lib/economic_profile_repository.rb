@@ -16,7 +16,9 @@ class EconomicProfileRepository
   end
 
   def find_by_name(name)
-    @economic_profiles.find { |economic_profile| economic_profile.name == name.upcase }
+    @economic_profiles.find do |economic_profile|
+      economic_profile.name == name.upcase
+    end
   end
 
 end

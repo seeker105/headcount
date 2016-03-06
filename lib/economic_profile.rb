@@ -1,8 +1,6 @@
 require 'pry'
-require_relative '../lib/clean_data'
 
 class EconomicProfile
-  include CleanData
 
   def initialize(data)
     @name                        = data[:name].upcase

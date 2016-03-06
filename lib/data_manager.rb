@@ -139,7 +139,7 @@ class DataManager
     string.gsub("Hawaiian/", "").gsub(" ", "_").downcase.to_sym
   end
 
-  def create_stw_tests
+  def create_statewide_tests
     # remove all_stw_tests variable?
     all_stw_tests = all_districts.map do |district|
       StatewideTest.new({name: district.name.upcase,

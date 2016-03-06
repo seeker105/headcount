@@ -5,9 +5,9 @@ require_relative '../lib/statewide_test_repository'
 require_relative '../lib/economic_profile_repository'
 
 class DistrictRepository
-  attr_reader :data_manager, :enrollment_repo,
-              :statewide_test_repo, :economic_profile_repo
   attr_accessor :districts
+  attr_reader   :data_manager, :enrollment_repo,
+                :statewide_test_repo, :economic_profile_repo
 
   def initialize
     @districts             = []
