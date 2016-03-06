@@ -192,16 +192,19 @@ class DataManager
                                       total: 0}}
         else
           group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-            {total: format_fixnum(row[:data].to_i)}})
+            {percentage: format_percentage(row[:data].to_f),
+             total: group.dig(row[:location].upcase, row[:timeframe].to_i, :total)}})
         end
       else
+        # binding.pry
         unless group.has_key?(row[:location].upcase)
           group[row[:location].upcase] =
             {row[:timeframe].to_i => {percentage: 0,
                                       total: format_fixnum(row[:data].to_i)}}
         else
           group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-            {percentage: format_percentage(row[:data].to_f)}})
+            {percentage: group.dig(row[:location].upcase, row[:timeframe].to_i, :percentage),
+             total: format_fixnum(row[:data].to_i)}})
         end
       end
     end
