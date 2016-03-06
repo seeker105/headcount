@@ -31,11 +31,9 @@ class HeadcountAnalyst
   end
 
   def years_and_variation_trends(original, compared)
-    result = Hash.new
-    original.each_key do |key|
+    original.each_key.with_object({}) do |key, result|
       result[key] = format_percentage(original[key] / compared[key])
     end
-    result
   end
 
   def kindergarten_participation_rate_divided_by_state_avg(name)
