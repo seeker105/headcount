@@ -8,30 +8,28 @@ require_relative '../lib/statewide_test'
 
 class StatewideTestTest < Minitest::Test
 
-  def setup
-    @stw_test_repo = StatewideTestRepository.new
-    @stw_test_repo.load_data({ :statewide_testing => {
-      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
-      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
-      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
-      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
-      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"}
-      })
-    @stw_test = @stw_test_repo.stw_tests.first
-  end
+  @@stw_test_repo = StatewideTestRepository.new
+  @@stw_test_repo.load_data({ :statewide_testing => {
+    :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+    :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+    :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+    :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+    :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"}
+    })
+  @@stw_test = @@stw_test_repo.stw_tests.first
 
   def test_can_create_statewidetest_object
-    assert_kind_of StatewideTest, @stw_test
+    assert_kind_of StatewideTest, @@stw_test
   end
 
   def test_proficient_by_grade_returns_error_with_unknown_grade
     assert_raises UnknownDataError do
-      @stw_test.proficient_by_grade(2)
+      @@stw_test.proficient_by_grade(2)
     end
   end
 
   def test_proficient_by_grade_returns_hash_of_all_third_grade_data
-    submitted = @stw_test.proficient_by_grade(3)
+    submitted = @@stw_test.proficient_by_grade(3)
     expected  = {2008 => {:math=>0.697, :reading=>0.703, :writing=>0.501},
                  2009 => {:math=>0.691, :reading=>0.726, :writing=>0.536},
                  2010 => {:math=>0.706, :reading=>0.698, :writing=>0.504},
@@ -44,7 +42,7 @@ class StatewideTestTest < Minitest::Test
   end
 
   def test_proficient_by_grade_returns_hash_of_all_eighth_grade_data
-    submitted = @stw_test.proficient_by_grade(8)
+    submitted = @@stw_test.proficient_by_grade(8)
     expected  = {2008 => {:math=>0.469, :reading=>0.703, :writing=>0.529},
                  2009 => {:math=>0.499, :reading=>0.726, :writing=>0.528},
                  2010 => {:math=>0.51, :reading=>0.679, :writing=>0.549},
@@ -58,12 +56,12 @@ class StatewideTestTest < Minitest::Test
 
   def test_proficient_by_race_or_ethnicity_returns_error_with_unknown_race
     assert_raises UnknownRaceError do
-      @stw_test.proficient_by_race_or_ethnicity(:Hobbit)
+      @@stw_test.proficient_by_race_or_ethnicity(:Hobbit)
     end
   end
 
   def test_proficient_by_race_or_ethnicity_returns_race_specific_data
-    submitted = @stw_test.proficient_by_race_or_ethnicity(:asian)
+    submitted = @@stw_test.proficient_by_race_or_ethnicity(:asian)
     expected = {2011 => {:math=>0.709, :reading=>0.748, :writing=>0.656},
                 2012 => {:math=>0.719, :reading=>0.757, :writing=>0.658},
                 2013 => {:math=>0.732, :reading=>0.769, :writing=>0.682},
@@ -74,12 +72,12 @@ class StatewideTestTest < Minitest::Test
 
   def test_proficient_for_subject_by_grade_in_year_returns_error_with_bad_subject
     assert_raises UnknownDataError do
-      @stw_test.proficient_for_subject_by_grade_in_year(:science, 8, 2010)
+      @@stw_test.proficient_for_subject_by_grade_in_year(:science, 8, 2010)
     end
   end
 
   def test_proficient_for_subject_by_grade_in_year
-    submitted = @stw_test.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
+    submitted = @@stw_test.proficient_for_subject_by_grade_in_year(:math, 3, 2008)
     expected  = 0.697
 
     assert_equal expected, submitted
@@ -87,18 +85,18 @@ class StatewideTestTest < Minitest::Test
 
   def test_proficient_for_race_by_subject_in_year_returns_error_with_bad_subject
     assert_raises UnknownDataError do
-      @stw_test.proficient_for_subject_by_race_in_year(:magic, :asian, 2012)
+      @@stw_test.proficient_for_subject_by_race_in_year(:magic, :asian, 2012)
     end
   end
 
   def test_proficient_for_race_by_subject_in_year_returns_error_with_bad_race
-    assert_raises UnknownRaceError do
-      @stw_test.proficient_for_subject_by_race_in_year(:math, :hobbit, 2012)
+    assert_raises UnknownDataError do
+      @@stw_test.proficient_for_subject_by_race_in_year(:math, :hobbit, 2012)
     end
   end
 
   def test_proficient_for_race_by_subject_in_year
-    submitted = @stw_test.proficient_for_subject_by_race_in_year(:math, :asian, 2012)
+    submitted = @@stw_test.proficient_for_subject_by_race_in_year(:math, :asian, 2012)
     expected  = 0.719
 
     assert_equal expected, submitted

@@ -55,10 +55,12 @@ class StatewideTest
 
   def proficient_for_subject_by_grade_in_year(subject, grade, year)
     raise UnknownDataError unless SUBJECTS.member?(subject)
-    proficient_by_grade(grade).fetch(year).fetch(subject)
+    pct = proficient_by_grade(grade).fetch(year).fetch(subject)
+    pct == 0.0 ? "N/A" : pct
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
+    raise UnknownDataError unless RACES.member?(race)
     raise UnknownDataError unless SUBJECTS.member?(subject)
     proficient_by_race_or_ethnicity(race).fetch(year).fetch(subject)
   end
