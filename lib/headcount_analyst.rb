@@ -161,8 +161,14 @@ class HeadcountAnalyst
     # binding.pry
   end
 
+  def select_grade(args, stw_test)
+    case args[:grade]
+    when 3 then stw_test.third_grade.clone
+    when 8 then stw_test.eighth_grade.clone
+    end
+  end
+
   def parser(args)
-    # binding.pry
     district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
       next if stw_test.name == "COLORADO"
 
@@ -171,6 +177,7 @@ class HeadcountAnalyst
       if args.has_key?(:subject)
         calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
       else
+        binding.pry if stw_test.name.include?"CENTER"
         math = calc_yr_to_yr_growth(stw_test.name, grade, :math)
         writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
         reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
@@ -182,19 +189,15 @@ class HeadcountAnalyst
     end
   end
 
-  def select_grade(args, stw_test)
-    case args[:grade]
-    when 3 then stw_test.third_grade.clone
-    when 8 then stw_test.eighth_grade.clone
-    end
-  end
-
   def calc_yr_to_yr_growth(name, grade, subject)
     grade.delete_if { |key, value| value.dig(subject) == 0.0 }
 
+    # binding.pry if name.include?('CENTER')
+
     unless grade.length < 2
-      growth_amt = grade.dig(grade.keys.max, subject) -
-        grade.dig(grade.keys.min, subject)
+      binding.pry if name.include?"CENTER"
+      growth_amt = format_pct(grade.dig(grade.keys.max, subject) -
+        grade.dig(grade.keys.min, subject))
       years = (grade.keys.max - grade.keys.min)
       [name, format_pct(growth_amt / years)]
     else
