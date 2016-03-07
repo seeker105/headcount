@@ -10,12 +10,13 @@ require_relative '../lib/clean_data'
 class DataManager
   include CleanData
 
-  attr_reader :all_districts, :all_enrollments, :all_stw_tests, :all_economic_profiles,
-              :kg_district_with_data, :hs_district_with_data,
+  attr_reader :all_districts, :all_enrollments,
+                :all_stw_tests, :all_economic_profiles,
+              :kg_dist_with_data, :hs_district_with_data,
               :third_grade_data, :eighth_grade_data,
               :math_data, :reading_data, :writing_data,
-              :median_household_income_data, :children_in_poverty_data,
-                :free_or_reduced_price_lunch_data, :title_i_data
+              :med_house_income_data, :child_in_pov_data,
+                :free_or_reduce_lunch_data, :title_i_data
 
   def initialize
     @all_districts = []
@@ -23,7 +24,7 @@ class DataManager
     @all_stw_tests = []
     @all_economic_profiles = []
 
-    @kg_district_with_data = {}
+    @kg_dist_with_data = {}
     @hs_district_with_data = {}
 
     @third_grade_data = {}
@@ -33,9 +34,9 @@ class DataManager
     @reading_data = {}
     @writing_data = {}
 
-    @median_household_income_data = {}
-    @children_in_poverty_data = {}
-    @free_or_reduced_price_lunch_data = {}
+    @med_house_income_data = {}
+    @child_in_pov_data = {}
+    @free_or_reduce_lunch_data = {}
     @title_i_data = {}
   end
 
@@ -60,7 +61,8 @@ class DataManager
   end
 
   def create_districts(row)
-    unless all_districts.any? {|district| district.name == row[:location].upcase}
+    unless all_districts.any? {|district| district.name ==
+        row[:location].upcase}
       all_districts << District.new({name: row[:location].upcase})
     end
   end
@@ -79,7 +81,7 @@ class DataManager
   end
 
   def enrollments_map
-    {:kindergarten => kg_district_with_data,
+    {:kindergarten => kg_dist_with_data,
      :high_school_graduation => hs_district_with_data}
   end
 
@@ -91,11 +93,11 @@ class DataManager
     all_districts.each do |district|
       unless hs_district_with_data.empty?
         all_enrollments << Enrollment.new({name: district.name.upcase,
-          kindergarten_participation: kg_district_with_data.fetch(district.name.upcase),
-          high_school_graduation: hs_district_with_data.fetch(district.name.upcase)})
+  kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase),
+  high_school_graduation: hs_district_with_data.fetch(district.name.upcase)})
       else
         all_enrollments << Enrollment.new({name: district.name.upcase,
-          kindergarten_participation: kg_district_with_data.fetch(district.name.upcase)})
+  kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
       end
     end
     all_enrollments
@@ -106,12 +108,15 @@ class DataManager
   end
 
   def collect_statewide_grade_data(group, row)
-    data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => format_pct(row[:data].to_f)}}
+    data_format = {row[:timeframe].to_i =>
+       {row[:score].downcase.to_sym => format_pct(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
     else
       unless group.dig(row[:location].upcase, row[:timeframe].to_i).nil?
-        group.dig(row[:location].upcase, row[:timeframe].to_i).merge!({row[:score].downcase.to_sym => format_pct(row[:data].to_f)})
+        group.dig(row[:location].upcase,
+         row[:timeframe].to_i).merge!({row[:score].downcase.to_sym =>
+            format_pct(row[:data].to_f)})
       else
         group.fetch(row[:location].upcase).merge!(data_format)
       end
@@ -123,12 +128,16 @@ class DataManager
   end
 
   def collect_statewide_race_data(file, group, row)
-    data_format = {format_string_to_key(row[:race_ethnicity]) => {row[:timeframe].to_i => format_pct(row[:data].to_f)}}
+    data_format = {format_string_to_key(row[:race_ethnicity]) =>
+       {row[:timeframe].to_i => format_pct(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
     else
-      unless group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).nil?
-        group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).merge!({row[:timeframe].to_i => format_pct(row[:data].to_f)})
+      unless group.dig(row[:location].upcase,
+          format_string_to_key(row[:race_ethnicity])).nil?
+        group.dig(row[:location].upcase,
+          format_string_to_key(row[:race_ethnicity])).merge!({row[:timeframe].to_i =>
+            format_pct(row[:data].to_f)})
       else
         group.fetch(row[:location].upcase).merge!(data_format)
       end
@@ -153,15 +162,15 @@ class DataManager
   end
 
   def economic_profile_map
-    {median_household_income: median_household_income_data,
-     children_in_poverty: children_in_poverty_data,
-     free_or_reduced_price_lunch: free_or_reduced_price_lunch_data,
+    {median_household_income: med_house_income_data,
+     children_in_poverty: child_in_pov_data,
+     free_or_reduced_price_lunch: free_or_reduce_lunch_data,
      title_i: title_i_data}
   end
 
   def collect_economic_profile_data(file, group, row)
     if file.include?('Median')
-      collect_median_household_income_data(group, row)
+      collect_med_house_income_data(group, row)
     elsif file.include?('lunch')
       collect_reduced_price_lunch_data(group, row)
     else
@@ -169,13 +178,14 @@ class DataManager
     end
   end
 
-  def collect_median_household_income_data(group, row)
+  def collect_med_house_income_data(group, row)
     range = row[:timeframe].split('-').map(&:to_i)
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] =
         {range => format_fixnum(row[:data].to_i)}
     else
-      group.fetch(row[:location].upcase).merge!({range => format_fixnum(row[:data].to_i)})
+      group.fetch(row[:location].upcase).merge!({range =>
+        format_fixnum(row[:data].to_i)})
     end
   end
 
@@ -189,7 +199,8 @@ class DataManager
         else
           group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
             {percentage: format_pct(row[:data].to_f),
-             total: group.dig(row[:location].upcase, row[:timeframe].to_i, :total)}})
+              total: group.dig(row[:location].upcase,
+                row[:timeframe].to_i, :total)}})
         end
       else
         unless group.has_key?(row[:location].upcase)
@@ -198,8 +209,9 @@ class DataManager
                                       total: format_fixnum(row[:data].to_i)}}
         else
           group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-            {percentage: group.dig(row[:location].upcase, row[:timeframe].to_i, :percentage),
-             total: format_fixnum(row[:data].to_i)}})
+            {percentage: group.dig(row[:location].upcase,
+              row[:timeframe].to_i, :percentage),
+                total: format_fixnum(row[:data].to_i)}})
         end
       end
     end
@@ -208,19 +220,20 @@ class DataManager
   def create_economic_profiles
     # remove all_stw_tests variable?
     all_economic_profiles = all_districts.map do |district|
+
       colorado_check = district.name.upcase == "COLORADO" ? "ACADEMY 20" : district.name.upcase
 
-      ex = EconomicProfile.new({median_household_income: median_household_income_data.fetch(district.name.upcase),
-        children_in_poverty: children_in_poverty_data.fetch(colorado_check),
-        free_or_reduced_price_lunch: free_or_reduced_price_lunch_data.fetch(district.name.upcase),
-        title_i: title_i_data.fetch(district.name.upcase)
-        })
+      ex = EconomicProfile.new(
+    {median_household_income: med_house_income_data.fetch(district.name.upcase),
+     children_in_poverty: child_in_pov_data.fetch(colorado_check),
+     free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(district.name.upcase),
+     title_i: title_i_data.fetch(district.name.upcase)
+    })
       ex.name = district.name.upcase
       ex
 
     end
   end
-
 
   def standard_location_year_percentage_data(file, group, row)
     unless group.has_key?(row[:location].upcase)
