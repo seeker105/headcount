@@ -115,23 +115,22 @@ class HeadcountAnalyst
 
   def select_grade(args, stw_test)
     case args[:grade]
-    when 3 then stw_test.third_grade.clone
-    when 8 then stw_test.eighth_grade.clone
+    when 3 then stw_test.third_grade
+    when 8 then stw_test.eighth_grade
     end
   end
 
   def parser(args)
     district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
       next if stw_test.name == "COLORADO"
-
-      grade = select_grade(args, stw_test)
-
+      grade = select_grade(args, stw_test).clone
+      
       if args.has_key?(:subject)
         calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
       else
-        math    = calc_yr_to_yr_growth(stw_test.name, grade.clone, :math)
-        reading = calc_yr_to_yr_growth(stw_test.name, grade.clone, :reading)
-        writing = calc_yr_to_yr_growth(stw_test.name, grade.clone, :writing)
+        math    = calc_yr_to_yr_growth(stw_test.name, grade, :math)
+        reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
+        writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
 
         total = ((math.last + writing.last + reading.last) / 3)
         [stw_test.name, total]
@@ -141,12 +140,12 @@ class HeadcountAnalyst
 
   def calc_yr_to_yr_growth(name, grade, subject)
     grade.delete_if { |key, value| value.dig(subject) == 0.0 }
-
     unless grade.length < 2
-      growth_amt = grade.dig(grade.keys.max, subject) - grade.dig(grade.keys.min, subject)
-      year       = (grade.keys.max - grade.keys.min)
-      total      = growth_amt.round(3) / year
-      [name, (total)]
+      growth = grade.dig(grade.keys.max, subject) -
+                 grade.dig(grade.keys.min, subject)
+      year   = (grade.keys.max - grade.keys.min)
+      total  = growth.round(3) / year
+      [name, total]
     else
       [name, 0.0]
     end
