@@ -94,20 +94,18 @@ class HeadcountAnalyst
     raise InsufficientInformationError unless args.has_key?(:grade)
     raise UnknownDataError unless GRADE.include?(args[:grade])
 
-    if args.keys.length == 1
-      growth_for_all_tests = parser(args).compact
-      growth_for_all_tests.max_by { |data| data.last}
+    growth_for_all_tests = parser(args).compact
 
-    elsif args.has_key?(:top)
-      growth_for_all_tests = parser(args).compact
-      growth_for_all_tests.sort_by { |data| data.last }.reverse[0..args[:top]]
+    sorted = growth_for_all_tests.max_by { |data| data.last}
+
+    if args.has_key?(:top)
+      sorted.reverse[0..args[:top]]
 
     elsif args.has_key?(:weighting)
       [true, false]
 
     else
-      growth_for_all_tests = parser(args).compact
-      growth_for_all_tests.max_by { |data| data.last }
+      sorted
     end
   end
 
