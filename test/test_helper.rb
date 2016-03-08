@@ -22,11 +22,9 @@ module TestHelper
       :title_i => "./data/Title I students.csv"}
     })
 
-
+  @@enrollment_repo       = @@district_repo.enrollment_repo
   @@stw_test_repo         = @@district_repo.statewide_test_repo
   @@economic_profile_repo = @@district_repo.economic_profile_repo
-  # @statewide_test_repo   = .new
-  # @economic_profile_repo = EconomicProfileRepository.new
 
   @@district = @@district_repo.find_by_name('academy 20')
 
