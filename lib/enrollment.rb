@@ -17,14 +17,9 @@ class Enrollment
   end
 
   def kindergarten_participation_in_year(year)
-    if contains_year?(year, kindergarten_participation)
+    if kindergarten_participation.has_key?(year)
       kindergarten_participation.fetch(year)
     end
-  end
-
-  def contains_year?(year, group)
-    raise ArgumentError unless year.is_a? Fixnum
-    group.has_key?(year)
   end
 
   def kd_participation_avg_all_yrs
@@ -44,9 +39,7 @@ class Enrollment
   end
 
   def graduation_rate_in_year(year)
-    if contains_year?(year, high_school_graduation)
-      high_school_graduation.fetch(year)
-    end
+    high_school_graduation.fetch(year) if high_school_graduation.has_key?(year)
   end
 
 end
