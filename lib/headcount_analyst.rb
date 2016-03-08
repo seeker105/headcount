@@ -98,7 +98,6 @@ class HeadcountAnalyst
 
     sorted = growth_for_all_tests.max_by { |data| data.last}
 
-    binding.pry
     if args.has_key?(:top)
       growth_for_all_tests.sort_by { |pair| pair.last }.reverse[0..args[:top]]
 

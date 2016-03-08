@@ -21,5 +21,4 @@ class DistrictTest < Minitest::Test
 
     assert_equal expected, submitted
   end
-
 end
