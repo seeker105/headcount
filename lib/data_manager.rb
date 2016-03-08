@@ -227,21 +227,16 @@ class DataManager
          free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(name),
          title_i: title_i_data.fetch(name)
         })
-        
+
       ex.name = name
       ex
 
     end
   end
 
-  # def colorado_check(district)
-  #   district.name.upcase == "COLORADO" ? "ACADEMY 20" : district.name.upcase
-  # end
-
   def colorado_check(name)
     name.upcase == "COLORADO" ? "ACADEMY 20" : name.upcase
   end
-
 
   def standard_location_year_percentage_data(file, group, row)
     unless group.has_key?(row[:location].upcase)
