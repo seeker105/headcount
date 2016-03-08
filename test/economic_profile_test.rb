@@ -18,4 +18,20 @@ class EconomicProfileTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+  def test_median_hosehould_income_in_year_returns_arg_error_for_non_fixnums
+    assert_raises UnknownDataError do
+      @@econ_profile.median_household_income_in_year("2010")
+    end
+  end
+
+  def test_median_hosehould_income_in_year_returns_arg_error_for_unknown_year
+    assert_raises UnknownDataError do
+      @@econ_profile.median_household_income_in_year(1807)
+    end
+  end
+
+  def test_median
+    skip
+  end
+
 end

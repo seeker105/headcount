@@ -1,7 +1,6 @@
 require 'pry'
 require_relative '../lib/custom_errors'
 
-
 class EconomicProfile
   attr_accessor :name
 
@@ -13,9 +12,14 @@ class EconomicProfile
   end
 
   def median_household_income_in_year(year)
-    raise UnknownDataError unless year.is_a? Fixnum
+    raise UnknownDataError unless year_valid?(year)
     total = collect_household_income_data_per_year(year)
     calc_average(total)
+  end
+
+  def year_valid?(year)
+    (@median_household_income.keys.flatten.include?(year)) &&
+      (year.is_a? Fixnum)
   end
 
   def collect_household_income_data_per_year(year)
