@@ -56,4 +56,11 @@ class EconomicProfileTest < Minitest::Test
     end
   end
 
+  def test_free_or_reduced_price_lunch_percentage_in_year_returns_float
+    submitted = @@econ_profile.free_or_reduced_price_lunch_percentage_in_year(2010)
+    expected  = 0.113
+
+    assert_equal expected, submitted
+  end
+
 end
