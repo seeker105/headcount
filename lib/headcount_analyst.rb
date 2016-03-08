@@ -124,12 +124,23 @@ class HeadcountAnalyst
       if args.has_key?(:subject)
         calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
       else
+
         math    = calc_yr_to_yr_growth(stw_test.name, grade, :math)
         reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
         writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
 
-        total = ((math.last + writing.last + reading.last) / 3)
-        [stw_test.name, total]
+        if args.has_key?(:weighting)
+          math    = [math.first, (args[:weighting][:math] * math.last)]
+          reading = [reading.first, (args[:weighting][:reading] * reading.last)]
+          writing = [writing.first, (args[:weighting][:writing] * writing.last)]
+
+          total = (math.last + writing.last + reading.last)
+          [stw_test.name, total]
+        else
+          total = ((math.last + writing.last + reading.last) / 3)
+          [stw_test.name, total]
+        end
+
       end
     end
   end
