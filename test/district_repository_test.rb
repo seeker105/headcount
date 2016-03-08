@@ -3,17 +3,13 @@ SimpleCov.start
 require 'pry'
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/district_repository'
-require_relative '../lib/district'
+require_relative './test_helper'
 
 class DistrictRepositoryTest < Minitest::Test
-
-  def setup
-    @district_repo = DistrictRepository.new
-  end
+  include TestHelper
 
   def test_can_create_enrollment_repo_object
-    assert_kind_of DistrictRepository, @district_repo
+    assert_kind_of DistrictRepository, @@district_repo
   end
 
   def test_find_by_name_returns_district
@@ -77,11 +73,7 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_district_repo_can_search_enrollment_repo_insensitive_search
     # skip
-    district_repo = DistrictRepository.new
-    district_repo.load_data(:enrollment => {
-      :kindergarten => "./data/Kindergartners in full-day program.csv"})
-
-    district  = district_repo.find_by_name("academy 20")
+    district  = @@district_repo.find_by_name("academy 20")
 
     submitted = district.enrollment.kindergarten_participation_in_year(2010)
     expected  = 0.436
@@ -91,14 +83,24 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_district_repo_can_access_enrollment_methods_through_district
     # skip
-    district_repo = DistrictRepository.new
-    district_repo.load_data({:enrollment => {
-      :kindergarten => "./data/Kindergartners in full-day program.csv"}})
-
-    district = district_repo.find_by_name("GUNNISON WATERSHED RE1J")
+    district = @@district_repo.find_by_name("GUNNISON WATERSHED RE1J")
 
     submitted = district.enrollment.kindergarten_participation_in_year(2004)
     expected  = 0.144
+
+    assert_equal expected, submitted
+  end
+
+  def test_kd_participation_avg_all_yrs_returns_avg
+    submitted = @@district_repo.kd_participation_avg_all_yrs("ACADEMY 20")
+    expected  = 0.406
+
+    assert_equal expected, submitted.round(3)
+  end
+
+  def test_graduation_average_all_yrs_returns_avg
+    submitted = @@district_repo.graduation_avg_all_years("ACADEMY 20")
+    expected  = 0.898
 
     assert_equal expected, submitted
   end
