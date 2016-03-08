@@ -44,13 +44,13 @@ class DistrictRepository
 
   def load_relationships
     districts.each do |district|
-      district.enrollment = repo_connector(district, enrollment_repo)
-      district.statewide_test = repo_connector(district, statewide_test_repo)
-      district.economic_profile = repo_connector(district, economic_profile_repo)
+      district.enrollment       = repo_connect(district, enrollment_repo)
+      district.statewide_test   = repo_connect(district, statewide_test_repo)
+      district.economic_profile = repo_connect(district, economic_profile_repo)
     end
   end
 
-  def repo_connector(district, repo)
+  def repo_connect(district, repo)
     repo.find_by_name(district.name)
   end
 

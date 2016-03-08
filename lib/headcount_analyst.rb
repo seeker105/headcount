@@ -57,7 +57,6 @@ class HeadcountAnalyst
     (kinder_var / grad_var).round(3)
   end
 
-
   def compare_multiple_districts_to_state_avg(districts)
     districts.map do |district|
       district = district.name if district.class == District
@@ -97,7 +96,6 @@ class HeadcountAnalyst
 
     if args.keys.length == 1
       growth_for_all_tests = parser(args).compact
-
       growth_for_all_tests.max_by { |data| data.last}
 
     elsif args.has_key?(:top)
@@ -124,7 +122,7 @@ class HeadcountAnalyst
     district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
       next if stw_test.name == "COLORADO"
       grade = select_grade(args, stw_test).clone
-      
+
       if args.has_key?(:subject)
         calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
       else
