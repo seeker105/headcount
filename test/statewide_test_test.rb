@@ -4,8 +4,6 @@ require 'pry'
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative './test_helper'
-require_relative '../lib/statewide_test_repository'
-require_relative '../lib/statewide_test'
 
 class StatewideTestTest < Minitest::Test
   include TestHelper

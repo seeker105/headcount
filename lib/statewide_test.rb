@@ -51,8 +51,8 @@ class StatewideTest
   end
 
   def proficient_for_subject_by_race_in_year(subject, race, year)
-    raise UnknownDataError unless RACES.member?(race)
-    raise UnknownDataError unless SUBJECTS.member?(subject)
+    raise UnknownDataError unless RACES.member?(race) &&
+      SUBJECTS.member?(subject)
     proficient_by_race_or_ethnicity(race).fetch(year).fetch(subject)
   end
 
