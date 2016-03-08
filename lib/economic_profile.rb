@@ -18,8 +18,7 @@ class EconomicProfile
   end
 
   def year_valid?(year)
-    (@median_household_income.keys.flatten.include?(year)) &&
-      (year.is_a? Fixnum)
+    @median_household_income.keys.flatten.include?(year)
   end
 
   def collect_household_income_data_per_year(year)

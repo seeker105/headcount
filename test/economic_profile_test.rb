@@ -30,8 +30,30 @@ class EconomicProfileTest < Minitest::Test
     end
   end
 
-  def test_median
-    skip
+  def test_median_hosehould_income_average_returns_average
+    submitted = @@econ_profile.median_household_income_average
+    expected  = 87635
+
+    assert_equal expected, submitted
+  end
+
+  def test_children_in_poverty_in_year_returns_float
+    submitted = @@econ_profile.children_in_poverty_in_year(2010)
+    expected  = 0.057
+
+    assert_equal expected, submitted
+  end
+
+  def test_children_in_poverty_in_year_returns_arg_error_for_string
+    assert_raises UnknownDataError do
+      @@econ_profile.children_in_poverty_in_year("2010")
+    end
+  end
+
+  def test_children_in_poverty_in_year_returns_arg_error_for_unknown_year
+    assert_raises UnknownDataError do
+      @@econ_profile.children_in_poverty_in_year(1807)
+    end
   end
 
 end
