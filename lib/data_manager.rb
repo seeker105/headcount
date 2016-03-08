@@ -136,8 +136,8 @@ class DataManager
       unless group.dig(row[:location].upcase,
           format_string_to_key(row[:race_ethnicity])).nil?
         group.dig(row[:location].upcase,
-          format_string_to_key(row[:race_ethnicity])).merge!({row[:timeframe].to_i =>
-            format_pct(row[:data].to_f)})
+          format_string_to_key(row[:race_ethnicity])).merge!(
+          {row[:timeframe].to_i => format_pct(row[:data].to_f)})
       else
         group.fetch(row[:location].upcase).merge!(data_format)
       end
@@ -220,20 +220,28 @@ class DataManager
   def create_economic_profiles
     # remove all_stw_tests variable?
     all_economic_profiles = all_districts.map do |district|
-
-      colorado_check = district.name.upcase == "COLORADO" ? "ACADEMY 20" : district.name.upcase
-
+      name = district.name.upcase
       ex = EconomicProfile.new(
-    {median_household_income: med_house_income_data.fetch(district.name.upcase),
-     children_in_poverty: child_in_pov_data.fetch(colorado_check),
-     free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(district.name.upcase),
-     title_i: title_i_data.fetch(district.name.upcase)
-    })
-      ex.name = district.name.upcase
+        {median_household_income: med_house_income_data.fetch(name),
+         children_in_poverty: child_in_pov_data.fetch(colorado_check(name)),
+         free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(name),
+         title_i: title_i_data.fetch(name)
+        })
+        
+      ex.name = name
       ex
 
     end
   end
+
+  # def colorado_check(district)
+  #   district.name.upcase == "COLORADO" ? "ACADEMY 20" : district.name.upcase
+  # end
+
+  def colorado_check(name)
+    name.upcase == "COLORADO" ? "ACADEMY 20" : name.upcase
+  end
+
 
   def standard_location_year_percentage_data(file, group, row)
     unless group.has_key?(row[:location].upcase)
