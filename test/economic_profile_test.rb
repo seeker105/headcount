@@ -63,4 +63,54 @@ class EconomicProfileTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+  def test_free_or_reduced_price_lunch_percentage_in_year_returns_arg_error_for_string
+    assert_raises UnknownDataError do
+      @@econ_profile.free_or_reduced_price_lunch_percentage_in_year("2010")
+    end
+  end
+
+  def test_free_or_reduced_price_lunch_percentage_in_year_returns_arg_error_for_unknown_year
+    assert_raises UnknownDataError do
+      @@econ_profile.free_or_reduced_price_lunch_percentage_in_year(1900)
+    end
+  end
+
+  def test_free_or_reduced_price_lunch_number_in_year_returns_float
+    submitted = @@econ_profile.free_or_reduced_price_lunch_number_in_year(2010)
+    expected  = 2601
+
+    assert_equal expected, submitted
+  end
+
+  def test_free_or_reduced_price_lunch_number_in_year_returns_arg_error_for_string
+    assert_raises UnknownDataError do
+      @@econ_profile.free_or_reduced_price_lunch_number_in_year("2010")
+    end
+  end
+
+  def test_free_or_reduced_price_lunch_number_in_year_returns_arg_error_for_unknown_year
+    assert_raises UnknownDataError do
+      @@econ_profile.free_or_reduced_price_lunch_number_in_year(1900)
+    end
+  end
+
+  def test_title_i_in_year_returns_float
+    submitted = @@econ_profile.title_i_in_year(2013)
+    expected  = 0.012
+
+    assert_equal expected, submitted
+  end
+
+  def test_title_i_in_year_returns_arg_error_for_string
+    assert_raises UnknownDataError do
+      @@econ_profile.title_i_in_year("2010")
+    end
+  end
+
+  def test_title_i_in_year_returns_arg_error_for_unknown_year
+    assert_raises UnknownDataError do
+      @@econ_profile.title_i_in_year(1900)
+    end
+  end
+
 end
