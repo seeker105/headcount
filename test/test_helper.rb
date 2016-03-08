@@ -21,6 +21,14 @@ module TestHelper
       :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv",
       :title_i => "./data/Title I students.csv"}
     })
+
+
+  @@stw_test_repo         = @@district_repo.statewide_test_repo
+  @@economic_profile_repo = @@district_repo.economic_profile_repo
+  # @enrollment_repo       = EnrollmentRepository.new
+  # @statewide_test_repo   = StatewideTestRepository.new
+  # @economic_profile_repo = EconomicProfileRepository.new
+
   @@district = @@district_repo.find_by_name('academy 20')
 
 end

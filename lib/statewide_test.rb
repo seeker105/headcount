@@ -18,8 +18,6 @@ class StatewideTest
     @math         = data[:math]
     @reading      = data[:reading]
     @writing      = data[:writing]
-
-    # @subjects = [math, reading, writing]
   end
 
   def proficient_by_grade(grade)
