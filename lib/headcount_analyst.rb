@@ -102,7 +102,7 @@ class HeadcountAnalyst
       sorted.reverse[0..args[:top]]
 
     elsif args.has_key?(:weighting)
-      [true, false]
+      sorted
 
     else
       sorted
