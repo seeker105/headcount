@@ -98,8 +98,9 @@ class HeadcountAnalyst
 
     sorted = growth_for_all_tests.max_by { |data| data.last}
 
+    binding.pry
     if args.has_key?(:top)
-      sorted.reverse[0..args[:top]]
+      growth_for_all_tests.sort_by { |pair| pair.last }.reverse[0..args[:top]]
 
     elsif args.has_key?(:weighting)
       sorted
@@ -130,6 +131,7 @@ class HeadcountAnalyst
         writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
 
         if args.has_key?(:weighting)
+          # confirm weighing adds up to 1.0
           math    = [math.first, (args[:weighting][:math] * math.last)]
           reading = [reading.first, (args[:weighting][:reading] * reading.last)]
           writing = [writing.first, (args[:weighting][:writing] * writing.last)]
