@@ -1,8 +1,3 @@
-require 'simplecov'
-SimpleCov.start
-require 'pry'
-require 'minitest/autorun'
-require 'minitest/pride'
 require_relative './test_helper'
 require_relative '../lib/economic_profile'
 

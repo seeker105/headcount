@@ -1,10 +1,4 @@
-require 'simplecov'
-SimpleCov.start
-require 'pry'
-require 'minitest/autorun'
-require 'minitest/pride'
 require_relative './test_helper'
-
 
 class DistrictRepositoryIntegrationsTest < Minitest::Test
   include TestHelper
