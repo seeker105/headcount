@@ -1,11 +1,9 @@
 require 'pry'
 require 'csv'
-require_relative '../lib/district_repository'
-require_relative '../lib/enrollment_repository'
+require_relative '../lib/clean_data'
 require_relative '../lib/district'
 require_relative '../lib/enrollment'
-require_relative '../lib/clean_data'
-
+require_relative '../lib/statewide_test'
 
 class DataManager
   include CleanData
