@@ -134,7 +134,7 @@ class HeadcountAnalyst
         writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
 
         if args.has_key?(:weighting)
-          # confirm weighing adds up to 1.0
+          raise InsufficientInformationError if args[:weighting].values.reduce(:+) != 1.0
           math    = [math.first, (args[:weighting][:math] * math.last)]
           reading = [reading.first, (args[:weighting][:reading] * reading.last)]
           writing = [writing.first, (args[:weighting][:writing] * writing.last)]

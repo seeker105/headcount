@@ -128,7 +128,7 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_weights_over_one
-    skip
+    # skip
     args = {grade: 8, :weighting => {:math => 1.5, :reading => 0.5, :writing => 0.0}}
     assert_raises InsufficientInformationError do
       @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
@@ -136,7 +136,7 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_weights_under_one
-    skip
+    # skip
     args = {grade: 8, :weighting => {:math => 0.25, :reading => 0.25, :writing => 0.0}}
     assert_raises InsufficientInformationError do
       @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
