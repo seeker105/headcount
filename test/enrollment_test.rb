@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 require 'pry'
 require 'minitest/autorun'
 require 'minitest/pride'
@@ -6,6 +8,12 @@ require_relative '../lib/enrollment'
 class EnrollmentTest < Minitest::Test
 
   def setup
+<<<<<<< HEAD
+    @enroll = Enrollment.new({name: "ACADEMY 20",
+              kindergarten_participation: { 2010 => 0.3915,
+                                            2011 => 0.35356,
+                                            2012 => 0.2677 }})
+=======
     @enroll = Enrollment.new({:name => "ACADEMY 20",
               :kindergarten_participation => { 2010 => 0.3915,
                                                2011 => 0.35356,
@@ -13,6 +21,7 @@ class EnrollmentTest < Minitest::Test
               :high_school_graduation => { 2010 => 0.3434,
                 2011 => 0.6845,
                 2012 => 0.1123 }})
+>>>>>>> master
   end
 
   def test_can_create_enrollment_object
@@ -47,6 +56,68 @@ class EnrollmentTest < Minitest::Test
     assert_equal expected, submitted
   end
 
+<<<<<<< HEAD
+  def test_can_return_graduation_rates_by_year
+    # skip
+    enroll = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677,
+                                                 2013 => 0.48774,
+                                                 2014 => 0.49022 },
+                   high_school_graduation: { 2010 => 0.895,
+                                             2011 => 0.895,
+                                             2012 => 0.88983,
+                                             2013 => 0.91373,
+                                             2014 => 0.898 }})
+
+    submitted = enroll.graduation_rate_by_year
+    expected = { 2010 => 0.895,
+                 2011 => 0.895,
+                 2012 => 0.889,
+                 2013 => 0.913,
+                 2014 => 0.898 }
+
+    assert_equal expected, submitted
+  end
+
+  def test_can_return_graduation_avg_for_all_years
+    # skip
+    enroll = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677,
+                                                 2013 => 0.48774,
+                                                 2014 => 0.49022 },
+                   high_school_graduation: { 2010 => 0.895,
+                                             2011 => 0.895,
+                                             2012 => 0.88983,
+                                             2013 => 0.91373,
+                                             2014 => 0.898 }})
+
+    submitted = enroll.graduation_avg_all_years
+    expected  = 0.898
+
+    assert_equal expected, submitted
+  end
+
+  def test_can_return_graduation_in_specific_year
+    # skip
+    enroll = Enrollment.new({name: "ACADEMY 20",
+                   kindergarten_participation: { 2010 => 0.3915,
+                                                 2011 => 0.35356,
+                                                 2012 => 0.2677,
+                                                 2013 => 0.48774,
+                                                 2014 => 0.49022 },
+                   high_school_graduation: { 2010 => 0.895,
+                                             2011 => 0.895,
+                                             2012 => 0.88983,
+                                             2013 => 0.91373,
+                                             2014 => 0.898 }})
+
+    submitted = enroll.graduation_rate_in_year(2012)
+    expected  = 0.889
+=======
   def test_graduation_rate_by_year_returns_the_correct_hash_of_years_and_rates
     # binding.pry
     submitted = @enroll.graduation_rate_by_year
@@ -60,6 +131,7 @@ class EnrollmentTest < Minitest::Test
     submitted = @enroll.graduation_rate_in_year(1980)
     assert_nil submitted
   end
+>>>>>>> master
 
   def test_graduation_rate_in_year_returns_rate_for_a_given_year
     submitted = @enroll.graduation_rate_in_year(2010)
