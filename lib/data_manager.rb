@@ -165,8 +165,13 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
   end
 
   def collect_statewide_race_data(group, row)
-    data_format = {format_string_to_key(row[:race_ethnicity]) =>
-       {row[:timeframe].to_i => format_pct(row[:data].to_f)}}
+    race_ethnicity = format_string_to_key(row[:race_ethnicity])
+    district       = row[:location].upcase
+    year           = row[:timeframe].to_i
+    data           = format_pct(row[:data].to_f)
+
+    data_format = format_nested_hash(race_ethnicity, year, data)
+
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] = data_format
     else
