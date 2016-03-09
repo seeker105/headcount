@@ -140,8 +140,8 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
     end
   end
 
-  def year_score_data_format(year, score, data)
-    { year => { score => data }}
+  def format_nested_hash(main_key, sub_key, sub_value)
+    { main_key => { sub_key => sub_value }}
   end
 
   def collect_statewide_grade_data(group, row)
@@ -154,12 +154,12 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
 
   def create_or_merge_stw_grade_data(group, row, district, year, score, data)
     unless group.has_key?(district)
-      group[district] = year_score_data_format(year, score, data)
+      group[district] = format_nested_hash(year, score, data)
     else
       unless group.dig(district, year).nil?
         group.dig(district, year).merge!({score => format_pct(row[:data].to_f)})
       else
-        group.fetch(district).merge!(year_score_data_format(year, score, data))
+        group.fetch(district).merge!(format_nested_hash(year, score, data))
       end
     end
   end
