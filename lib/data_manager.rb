@@ -216,20 +216,21 @@ class DataManager
   end
 
   def create_economic_profiles
-    # remove all_stw_tests variable?
     all_economic_profiles = all_districts.map do |district|
       name = district.name.upcase
-      ex = EconomicProfile.new(
-        {median_household_income: med_house_income_data.fetch(name),
-         children_in_poverty: child_in_pov_data.fetch(colorado_check(name)),
-         free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(name),
-         title_i: title_i_data.fetch(name)
-        })
-
-      ex.name = name
-      ex
-
+      profile = create_individual_economic_profile(name)
+      profile.name = name
+      profile
     end
+  end
+
+  def create_individual_economic_profile(name)
+    EconomicProfile.new(
+      {median_household_income: med_house_income_data.fetch(name),
+       children_in_poverty: child_in_pov_data.fetch(colorado_check(name)),
+       free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(name),
+       title_i: title_i_data.fetch(name)
+      })
   end
 
   def colorado_check(name)
