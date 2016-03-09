@@ -90,6 +90,11 @@ class HeadcountAnalyst
     end
   end
 
+  def args_valid?(args)
+    raise InsufficientInformationError unless args.has_key?(:grade)
+    raise UnknownDataError unless GRADE.include?(args[:grade])
+  end
+
   def top_statewide_test_year_over_year_growth(args)
     raise InsufficientInformationError unless args.has_key?(:grade)
     raise UnknownDataError unless GRADE.include?(args[:grade])
@@ -99,7 +104,7 @@ class HeadcountAnalyst
     sorted = growth_for_all_tests.max_by { |data| data.last}
 
     if args.has_key?(:top)
-      growth_for_all_tests.sort_by { |pair| pair.last }.reverse[0..args[:top]]
+      growth_for_all_tests.sort_by { |pair| pair.last }.reverse[0...args[:top]]
 
     elsif args.has_key?(:weighting)
       sorted

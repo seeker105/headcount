@@ -20,4 +20,11 @@ class StatewideTestRepositoryTest < Minitest::Test
     assert_equal name, submitted.name
   end
 
+  def test_statewide_test_repo_finds_a_statewide_test_by_name
+    name      = 'this is absolutely not a repo'
+    submitted = @@stw_test_repo.find_by_name(name)
+
+    assert_nil submitted
+  end
+
 end

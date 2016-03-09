@@ -1,4 +1,5 @@
 require_relative '../lib/district_repository'
+require_relative '../lib/headcount_analyst'
 
 module TestHelper
 
@@ -26,6 +27,8 @@ module TestHelper
   @@stw_test_repo         = @@district_repo.statewide_test_repo
   @@economic_profile_repo = @@district_repo.economic_profile_repo
 
-  @@district = @@district_repo.find_by_name('academy 20')
+  @@headcount_analyst     = HeadcountAnalyst.new(@@district_repo)
+
+  @@district              = @@district_repo.find_by_name('academy 20')
 
 end
