@@ -149,7 +149,10 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
     year     = row[:timeframe].to_i
     score    = row[:score].downcase.to_sym
     data     = format_pct(row[:data].to_f)
+    create_or_merge_stw_grade_data(group, row, district, year, score, data)
+  end
 
+  def create_or_merge_stw_grade_data(group, row, district, year, score, data)
     unless group.has_key?(district)
       group[district] = year_score_data_format(year, score, data)
     else
