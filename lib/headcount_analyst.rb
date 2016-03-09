@@ -98,8 +98,7 @@ class HeadcountAnalyst
   def top_statewide_test_year_over_year_growth(args)
     args_valid?(args)
     all_growth_data = parser(args).compact.sort_by { |pair| pair.last }.reverse
-    cleaned = clean_growth_data(all_growth_data)
-
+    cleaned         = clean_growth_data(all_growth_data)
     args.has_key?(:top) ? cleaned[0...args[:top]] : cleaned.first
   end
 
@@ -123,29 +122,37 @@ class HeadcountAnalyst
     end
   end
 
-  def new_method(args, stw_test, grade)
+  def growth_by_dicipline(stw_test, grade)
     math    = calc_yr_to_yr_growth(stw_test.name, grade, :math)
     reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
     writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
+    {math: math, reading: reading, writing: writing}
+  end
+
+  def new_method(args, stw_test, grade)
+    subjects = growth_by_dicipline(stw_test, grade)
 
     if args.has_key?(:weighting)
-      weighted = weigh_subjects(args, math, reading, writing)
-      total    = weighted.map { |pair| pair.last }.reduce(:+)
+      weighted = weigh_subjects(args, subjects)
+      total    = weighted.values.map {|pair| pair.last}.reduce(:+)
       [stw_test.name, total]
     else
-      total = ((math.last + writing.last + reading.last) / 3)
+      total = ((subjects[:math].last + subjects[:writing].last +
+        subjects[:reading].last) / 3)
       [stw_test.name, total]
     end
   end
 
-  def weigh_subjects(args, math, reading, writing)
+  def weigh_subjects(args, subjects)
     raise ArgumentError if args[:weighting].values.reduce(:+) != 1.0
-    math    = [math.first, (args[:weighting][:math] * math.last)]
-    reading = [reading.first, (args[:weighting][:reading] * reading.last)]
-    writing = [writing.first, (args[:weighting][:writing] * writing.last)]
-    [math, reading, writing]
+    subjects[:math]    = [subjects[:math].first,
+                         (args[:weighting][:math] * subjects[:math].last) ]
+    subjects[:reading] = [subjects[:reading].first,
+                         (args[:weighting][:reading] * subjects[:reading].last)]
+    subjects[:writing] = [subjects[:reading],
+                         (args[:weighting][:writing] * subjects[:reading].last)]
+    subjects
   end
-
 
   def select_grade(args, stw_test)
     case args[:grade]
