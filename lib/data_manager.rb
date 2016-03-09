@@ -69,31 +69,31 @@ class DataManager
   end
 
   def create_repos(file, name, row)
-    process_enrollments(name, row)
-    process_statewide_tests(name, row)
-    process_statewide_race_data(name, row)
-    process_economic_profile_data(file, name, row)
+    parse_enrollment_data(name, row)
+    parse_statewide_test_data(name, row)
+    parse_statewide_race_data(name, row)
+    parse_economic_profile_data(file, name, row)
   end
 
-  def process_enrollments(name, row)
+  def parse_enrollment_data(name, row)
     if enrollments_map.include?(name)
       collect_enrollments_data(enrollments_map[name], row)
     end
   end
 
-  def process_statewide_tests(name, row)
+  def parse_statewide_test_data(name, row)
     if statewide_test_map.include?(name)
       collect_statewide_grade_data(statewide_test_map[name], row)
     end
   end
 
-  def process_statewide_race_data(name, row)
+  def parse_statewide_race_data(name, row)
     if statewide_race_map.include?(name)
       collect_statewide_race_data(statewide_race_map[name], row)
     end
   end
 
-  def process_economic_profile_data(file, name, row)
+  def parse_economic_profile_data(file, name, row)
     if economic_profile_map.include?(name)
       collect_economic_profile_data(file, economic_profile_map[name], row)
     end
@@ -140,18 +140,23 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
     end
   end
 
+  def year_score_data_format(year, score, data)
+    { year => { score => data }}
+  end
+
   def collect_statewide_grade_data(group, row)
-    data_format = {row[:timeframe].to_i =>
-       {row[:score].downcase.to_sym => format_pct(row[:data].to_f)}}
-    unless group.has_key?(row[:location].upcase)
-      group[row[:location].upcase] = data_format
+    district = row[:location].upcase
+    year     = row[:timeframe].to_i
+    score    = row[:score].downcase.to_sym
+    data     = format_pct(row[:data].to_f)
+
+    unless group.has_key?(district)
+      group[district] = year_score_data_format(year, score, data)
     else
-      unless group.dig(row[:location].upcase, row[:timeframe].to_i).nil?
-        group.dig(row[:location].upcase,
-         row[:timeframe].to_i).merge!({row[:score].downcase.to_sym =>
-            format_pct(row[:data].to_f)})
+      unless group.dig(district, year).nil?
+        group.dig(district, year).merge!({score => format_pct(row[:data].to_f)})
       else
-        group.fetch(row[:location].upcase).merge!(data_format)
+        group.fetch(district).merge!(year_score_data_format(year, score, data))
       end
     end
   end
