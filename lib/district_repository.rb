@@ -10,7 +10,6 @@ class DistrictRepository
                 :statewide_test_repo, :economic_profile_repo
 
   def initialize
-    # @districts             = []
     @data_manager          = DataManager.new
     @enrollment_repo       = EnrollmentRepository.new
     @statewide_test_repo   = StatewideTestRepository.new
