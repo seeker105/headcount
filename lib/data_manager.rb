@@ -69,13 +69,32 @@ class DataManager
   end
 
   def create_repos(file, name, row)
+    process_enrollments(name, row)
+    process_statewide_tests(name, row)
+    process_statewide_race_data(name, row)
+    process_economic_profile_data(file, name, row)
+  end
+
+  def process_enrollments(name, row)
     if enrollments_map.include?(name)
       collect_enrollments_data(enrollments_map[name], row)
-    elsif statewide_test_map.include?(name)
+    end
+  end
+
+  def process_statewide_tests(name, row)
+    if statewide_test_map.include?(name)
       collect_statewide_grade_data(statewide_test_map[name], row)
-    elsif statewide_race_map.include?(name)
+    end
+  end
+
+  def process_statewide_race_data(name, row)
+    if statewide_race_map.include?(name)
       collect_statewide_race_data(statewide_race_map[name], row)
-    elsif economic_profile_map.include?(name)
+    end
+  end
+
+  def process_economic_profile_data(file, name, row)
+    if economic_profile_map.include?(name)
       collect_economic_profile_data(file, economic_profile_map[name], row)
     end
   end
