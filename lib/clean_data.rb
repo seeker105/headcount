@@ -11,7 +11,7 @@ module CleanData
     case pct
     when Float then (pct * 1000).floor / 1000.0
     when Fixnum then pct.to_f
-    else 0.0
+    else "N/A"
     end
   end
 

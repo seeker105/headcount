@@ -4,20 +4,31 @@ require_relative '../lib/district_repository'
 require_relative '../lib/enrollment_repository'
 require_relative '../lib/district'
 require_relative '../lib/enrollment'
-
 require_relative '../lib/clean_data'
 
 
 class DataManager
   include CleanData
 
-  attr_reader :all_districts, :all_enrollments, :kg_district_with_data, :hs_district_with_data
+  attr_reader :all_districts, :all_enrollments, :all_stw_tests,
+              :kg_district_with_data, :hs_district_with_data,
+              :third_grade_data, :eighth_grade_data,
+              :math_data, :reading_data, :writing_data
 
   def initialize
     @all_districts = []
     @all_enrollments = []
+    @all_stw_tests = []
+
     @kg_district_with_data = {}
     @hs_district_with_data = {}
+
+    @third_grade_data = {}
+    @eighth_grade_data = {}
+
+    @math_data = {}
+    @reading_data = {}
+    @writing_data = {}
   end
 
   def load_data(data_hash)
@@ -36,13 +47,38 @@ class DataManager
     contents = CSV.open file, headers: true, header_converters: :symbol
     contents.each do |row|
       create_districts(row)
-      collect_data(data_collection_map[name], row)
+      create_repos(file, name, row)
     end
   end
 
   def create_districts(row)
     unless all_districts.any? {|district| district.name == row[:location].upcase}
       all_districts << District.new({name: row[:location].upcase})
+    end
+  end
+
+  def create_repos(file, name, row)
+    if enrollments_map.include?(name)
+      collect_enrollments_data(enrollments_map[name], row)
+    elsif statewide_test_map.include?(name)
+      collect_statewide_grade_data(statewide_test_map[name], row)
+    elsif statewide_race_map.include?(name)
+      collect_statewide_race_data(file, statewide_race_map[name], row)
+    end
+  end
+
+  def enrollments_map
+    {:kindergarten => kg_district_with_data,
+     :high_school_graduation => hs_district_with_data}
+  end
+
+  def collect_enrollments_data(group, row)
+    unless group.has_key?(row[:location].upcase)
+      group[row[:location].upcase] =
+        {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
+    else
+      group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
+         format_percentage(row[:data].to_f)})
     end
   end
 
@@ -60,18 +96,54 @@ class DataManager
     all_enrollments
   end
 
-  def data_collection_map
-    {:kindergarten => kg_district_with_data,
-     :high_school_graduation => hs_district_with_data}
+  def statewide_test_map
+    { third_grade: third_grade_data, eighth_grade: eighth_grade_data}
   end
 
-  def collect_data(group, row)
+  def collect_statewide_grade_data(group, row)
+    data_format = {row[:timeframe].to_i => {row[:score].downcase.to_sym => format_percentage(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
-      group[row[:location].upcase] =
-        {row[:timeframe].to_i => format_percentage(row[:data].to_f)}
+      group[row[:location].upcase] = data_format
     else
-      group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-         format_percentage(row[:data].to_f)})
+      unless group.dig(row[:location].upcase, row[:timeframe].to_i).nil?
+        group.dig(row[:location].upcase, row[:timeframe].to_i).merge!({row[:score].downcase.to_sym => format_percentage(row[:data].to_f)})
+      else
+        group.fetch(row[:location].upcase).merge!(data_format)
+      end
+    end
+  end
+
+  def statewide_race_map
+    {math: math_data, reading: reading_data, writing: writing_data}
+  end
+
+  def collect_statewide_race_data(file, group, row)
+    # binding.pry
+    data_format = {format_string_to_key(row[:race_ethnicity]) => {row[:timeframe].to_i => format_percentage(row[:data].to_f)}}
+    unless group.has_key?(row[:location].upcase)
+      group[row[:location].upcase] = data_format
+    else
+      unless group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).nil?
+        group.dig(row[:location].upcase, format_string_to_key(row[:race_ethnicity])).merge!({row[:timeframe].to_i => format_percentage(row[:data].to_f)})
+      else
+        group.fetch(row[:location].upcase).merge!(data_format)
+      end
+    end
+  end
+
+  def format_string_to_key(string)
+    string.gsub("Hawaiian/", "").gsub(" ", "_").downcase.to_sym
+  end
+
+  def create_stw_tests
+    all_stw_tests = all_districts.map do |district|
+      StatewideTest.new({name: district.name.upcase,
+        third_grade: third_grade_data.fetch(district.name.upcase),
+        eighth_grade: eighth_grade_data.fetch(district.name.upcase),
+        math: math_data.fetch(district.name.upcase),
+        reading: reading_data.fetch(district.name.upcase),
+        writing: writing_data.fetch(district.name.upcase)
+      })
     end
   end
 

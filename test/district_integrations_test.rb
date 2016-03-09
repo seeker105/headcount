@@ -10,18 +10,40 @@ require_relative '../lib/enrollment'
 
 class DistrictRepositoryIntegrationsTest < Minitest::Test
 
-  def test_district_can_process_enrollment_with_two_csvs
-    # skip
-    district_repo  = DistrictRepository.new
-    district_repo.load_data(:enrollment => {
+  @@district_repo  = DistrictRepository.new
+  @@district_repo.load_data({
+    :enrollment => {
       :kindergarten => "./data/Kindergartners in full-day program.csv",
-      :high_school_graduation => "./data/High school graduation rates.csv"})
+      :high_school_graduation => "./data/High school graduation rates.csv"},
 
-    submitted = district_repo.find_by_name("ACADEMY 20")
+    :statewide_testing => {
+      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv",
+      :math => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Math.csv",
+      :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
+      :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"}
+      })
 
-    assert_equal 0.436, submitted.enrollment.kindergarten_participation_in_year(2010)
+  def district_repo_can_find_kindergarten_enrollment_participation_in_given_year
+    district = @@district_repo.find_by_name("ACADEMY 20")
+    submitted = district.enrollment.kindergarten_participation_in_year(2010)
+
+    assert_equal 0.436, submitted
   end
 
+  def test_statewide_test_repo_returns_nil_for_a_bad_name
+    district = @@district_repo.find_by_name("ACADEMY 20")
+    submitted = district.statewide_test
 
+    assert_kind_of StatewideTest, submitted
+  end
+
+  def test_statewide_test_repo_finds_a_statewide_test_by_name
+    name      = 'ACADEMY 20'
+    submitted = @@district_repo.statewide_test_repo.find_by_name(name)
+
+    assert_kind_of StatewideTest, submitted
+    assert_equal name, submitted.name
+  end
 
 end

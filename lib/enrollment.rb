@@ -7,9 +7,9 @@ class Enrollment
   attr_reader :name, :kindergarten_participation, :high_school_graduation
 
   def initialize(data)
-    @name = data[:name].upcase
+    @name                       = data[:name].upcase
     @kindergarten_participation = clean_data(data[:kindergarten_participation])
-    @high_school_graduation = clean_data(data[:high_school_graduation])
+    @high_school_graduation     = clean_data(data[:high_school_graduation])
   end
 
   def kindergarten_participation_by_year

@@ -31,6 +31,7 @@ class HeadcountAnalyst
   end
 
   def kd_participation_total_avg_for_location(name)
+    # binding.pry
     format_percentage(district_repo.find_by_name(name).enrollment.kd_participation_avg_all_yrs)
   end
 
@@ -38,23 +39,9 @@ class HeadcountAnalyst
     district_repo.find_by_name(name).enrollment.kindergarten_participation
   end
 
-  def kindergarten_participation_rate_variation_trend(name, comparison)
-    original = kd_participation_avg_for_each_year(name)
-    compared = kd_participation_avg_for_each_year(comparison[:against])
-    years_and_variation_trends(original, compared)
-  end
-
-  def years_and_variation_trends(original, compared)
-    result = Hash.new
-    original.each_key do |key|
-      result[key] = format_percentage(original[key] / compared[key])
-    end
-    (original / compared).decimal_floor_3
-  end
-
-  def kd_participation_total_avg_for_location(name)
-    @district_repo.enrollment_by_name(name).kd_participation_avg_all_yrs
-  end
+  # def kd_participation_total_avg_for_location(name)
+  #   @district_repo.enrollment_by_name(name).kd_participation_avg_all_yrs
+  # end
 
   def kindergarten_participation_rate_variation_trend(name, comparison)
     original_hash = @district_repo.enrollment_by_name(name).kindergarten_participation_by_year
@@ -79,9 +66,9 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(name)
-    kindergarten_variation = kindergarten_participation_rate_divided_by_state_avg(name)
-    graduation_variation   = high_school_grad_rate_divided_by_state_avg(name)
-    (kindergarten_variation / graduation_variation).round(3)
+    kinder_var = kindergarten_participation_rate_divided_by_state_avg(name)
+    grad_var   = high_school_grad_rate_divided_by_state_avg(name)
+    (kinder_var / grad_var).round(3)
   end
 
   def compare_multiple_districts_to_state_avg(districts)
@@ -110,15 +97,15 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(input)
-    if input.has_key?(:for)
-      if input[:for] == 'STATEWIDE'
-        check_correlation(district_repo.districts)
-      else
-        compare_single_district_to_state_avg(input[:for])
-      end
+    if input.has_value?('STATEWIDE')
+      check_correlation(district_repo.districts)
     else
-      check_correlation(input[:across])
+      check_correlation(input.values.flatten)
     end
+  end
+
+  def top_statewide_test_year_over_year_growth(grade_and_subject)
+    # iteration 5 method
   end
 
 end
