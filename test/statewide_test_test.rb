@@ -3,7 +3,7 @@ require_relative './test_helper'
 class StatewideTestTest < Minitest::Test
   include TestHelper
 
-  @@stw_test = @@stw_test_repo.statewide_tests.first
+  @@stw_test = @@stw_test_repo.find_by_name("COLORADO")
 
   def test_can_create_statewidetest_object
     assert_kind_of StatewideTest, @@stw_test

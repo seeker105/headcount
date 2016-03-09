@@ -84,8 +84,6 @@ class HeadcountAnalyst
 
   def kindergarten_participation_correlates_with_high_school_graduation(input)
     if input.has_value?('STATEWIDE')
-      # binding.pry
-      # check_correlation(district_repo.districts)
       check_correlation(district_repo.districts.values)
     else
       check_correlation(input.values.flatten)
@@ -109,7 +107,7 @@ class HeadcountAnalyst
   end
 
   def parser(args)
-    district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
+    district_repo.statewide_test_repo.statewide_tests.values.map do |stw_test|
       next if stw_test.name == "COLORADO"
       grade = select_grade(args, stw_test).clone
       check_subject_specific(args, stw_test, grade)
