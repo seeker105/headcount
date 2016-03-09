@@ -68,11 +68,11 @@ class DataManager
   def create_repos(file, name, row)
     if enrollments_map.include?(name)
       # remove file when done
-      collect_enrollments_data(file, enrollments_map[name], row)
+      collect_enrollments_data(enrollments_map[name], row)
     elsif statewide_test_map.include?(name)
       collect_statewide_grade_data(statewide_test_map[name], row)
     elsif statewide_race_map.include?(name)
-      collect_statewide_race_data(file, statewide_race_map[name], row)
+      collect_statewide_race_data(statewide_race_map[name], row)
     elsif economic_profile_map.include?(name)
       collect_economic_profile_data(file, economic_profile_map[name], row)
     end
@@ -83,8 +83,8 @@ class DataManager
      :high_school_graduation => hs_district_with_data}
   end
 
-  def collect_enrollments_data(file, group, row)
-    standard_location_year_percentage_data(file, group, row)
+  def collect_enrollments_data(group, row)
+    standard_location_year_percentage_data(group, row)
   end
 
   def create_enrollments
@@ -125,7 +125,7 @@ class DataManager
     {math: math_data, reading: reading_data, writing: writing_data}
   end
 
-  def collect_statewide_race_data(file, group, row)
+  def collect_statewide_race_data(group, row)
     data_format = {format_string_to_key(row[:race_ethnicity]) =>
        {row[:timeframe].to_i => format_pct(row[:data].to_f)}}
     unless group.has_key?(row[:location].upcase)
@@ -149,14 +149,18 @@ class DataManager
   def create_statewide_tests
     # remove all_stw_tests variable?
     all_stw_tests = all_districts.map do |district|
-      StatewideTest.new({name: district.name.upcase,
-        third_grade: third_grade_data.fetch(district.name.upcase),
-        eighth_grade: eighth_grade_data.fetch(district.name.upcase),
-        math: math_data.fetch(district.name.upcase),
-        reading: reading_data.fetch(district.name.upcase),
-        writing: writing_data.fetch(district.name.upcase)
-      })
+      create_inividual_statewide_test(district)
     end
+  end
+
+  def create_inividual_statewide_test(district)
+    StatewideTest.new({name: district.name.upcase,
+      third_grade: third_grade_data.fetch(district.name.upcase),
+      eighth_grade: eighth_grade_data.fetch(district.name.upcase),
+      math: math_data.fetch(district.name.upcase),
+      reading: reading_data.fetch(district.name.upcase),
+      writing: writing_data.fetch(district.name.upcase)
+    })
   end
 
   def economic_profile_map
@@ -172,7 +176,7 @@ class DataManager
     elsif file.include?('lunch')
       collect_reduced_price_lunch_data(group, row)
     else
-      standard_location_year_percentage_data(file, group, row)
+      standard_location_year_percentage_data(group, row)
     end
   end
 
@@ -237,7 +241,7 @@ class DataManager
     name.upcase == "COLORADO" ? "ACADEMY 20" : name.upcase
   end
 
-  def standard_location_year_percentage_data(file, group, row)
+  def standard_location_year_percentage_data(group, row)
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] =
         {row[:timeframe].to_i => format_pct(row[:data].to_f)}
