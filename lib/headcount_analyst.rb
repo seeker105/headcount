@@ -99,18 +99,17 @@ class HeadcountAnalyst
     raise InsufficientInformationError unless args.has_key?(:grade)
     raise UnknownDataError unless GRADE.include?(args[:grade])
 
-    growth_for_all_tests = parser(args).compact
-
-    sorted = growth_for_all_tests.max_by { |data| data.last}
+    growth_for_all_tests = parser(args).sort_by { |pair| pair.last }.reverse
+    cleaned = growth_for_all_tests.map do |data|
+      [data.first, format_pct(data.last)]
+    end
 
     if args.has_key?(:top)
-      growth_for_all_tests.sort_by { |pair| pair.last }.reverse[0...args[:top]]
-
+      cleaned[0...args[:top]]
     elsif args.has_key?(:weighting)
-      sorted
-
+      cleaned.first
     else
-      sorted
+      cleaned.first
     end
   end
 
@@ -148,7 +147,7 @@ class HeadcountAnalyst
         end
 
       end
-    end
+    end.compact
   end
 
   def calc_yr_to_yr_growth(name, grade, subject)
