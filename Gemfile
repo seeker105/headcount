@@ -6,4 +6,7 @@ gem 'rake'
 gem 'minitest'
 gem 'mrspec'
 gem 'pry'
+<<<<<<< HEAD
 gem "simplecov"
+=======
+>>>>>>> master
