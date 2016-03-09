@@ -96,22 +96,56 @@ class HeadcountAnalyst
   end
 
   def top_statewide_test_year_over_year_growth(args)
-    raise InsufficientInformationError unless args.has_key?(:grade)
-    raise UnknownDataError unless GRADE.include?(args[:grade])
+    args_valid?(args)
+    all_growth_data = parser(args).compact.sort_by { |pair| pair.last }.reverse
+    cleaned = clean_growth_data(all_growth_data)
 
-    growth_for_all_tests = parser(args).sort_by { |pair| pair.last }.reverse
-    cleaned = growth_for_all_tests.map do |data|
-      [data.first, format_pct(data.last)]
-    end
+    args.has_key?(:top) ? cleaned[0...args[:top]] : cleaned.first
+  end
 
-    if args.has_key?(:top)
-      cleaned[0...args[:top]]
-    elsif args.has_key?(:weighting)
-      cleaned.first
-    else
-      cleaned.first
+  def clean_growth_data(collection)
+    collection.map { |data| [data.first, format_pct(data.last)] }
+  end
+
+  def parser(args)
+    district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
+      next if stw_test.name == "COLORADO"
+      grade = select_grade(args, stw_test).clone
+      args_path(args, stw_test, grade)
     end
   end
+
+  def args_path(args, stw_test, grade)
+    if args.has_key?(:subject)
+      calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
+    else
+      new_method(args, stw_test, grade)
+    end
+  end
+
+  def new_method(args, stw_test, grade)
+    math    = calc_yr_to_yr_growth(stw_test.name, grade, :math)
+    reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
+    writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
+
+    if args.has_key?(:weighting)
+      weighted = weigh_subjects(args, math, reading, writing)
+      total    = weighted.map { |pair| pair.last }.reduce(:+)
+      [stw_test.name, total]
+    else
+      total = ((math.last + writing.last + reading.last) / 3)
+      [stw_test.name, total]
+    end
+  end
+
+  def weigh_subjects(args, math, reading, writing)
+    raise ArgumentError if args[:weighting].values.reduce(:+) != 1.0
+    math    = [math.first, (args[:weighting][:math] * math.last)]
+    reading = [reading.first, (args[:weighting][:reading] * reading.last)]
+    writing = [writing.first, (args[:weighting][:writing] * writing.last)]
+    [math, reading, writing]
+  end
+
 
   def select_grade(args, stw_test)
     case args[:grade]
@@ -120,41 +154,11 @@ class HeadcountAnalyst
     end
   end
 
-  def parser(args)
-    district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
-      next if stw_test.name == "COLORADO"
-      grade = select_grade(args, stw_test).clone
-
-      if args.has_key?(:subject)
-        calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
-      else
-
-        math    = calc_yr_to_yr_growth(stw_test.name, grade, :math)
-        reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
-        writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
-
-        if args.has_key?(:weighting)
-          raise InsufficientInformationError if args[:weighting].values.reduce(:+) != 1.0
-          math    = [math.first, (args[:weighting][:math] * math.last)]
-          reading = [reading.first, (args[:weighting][:reading] * reading.last)]
-          writing = [writing.first, (args[:weighting][:writing] * writing.last)]
-
-          total = (math.last + writing.last + reading.last)
-          [stw_test.name, total]
-        else
-          total = ((math.last + writing.last + reading.last) / 3)
-          [stw_test.name, total]
-        end
-
-      end
-    end.compact
-  end
-
   def calc_yr_to_yr_growth(name, grade, subject)
     grade.delete_if { |key, value| value.dig(subject) == 0.0 }
     unless grade.length < 2
       growth = grade.dig(grade.keys.max, subject) -
-                 grade.dig(grade.keys.min, subject)
+        grade.dig(grade.keys.min, subject)
       year   = (grade.keys.max - grade.keys.min)
       total  = growth.round(3) / year
       [name, total]
