@@ -1,5 +1,4 @@
 require 'pry'
-require 'csv'
 require_relative '../lib/data_manager'
 
 class EnrollmentRepository

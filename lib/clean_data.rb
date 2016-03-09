@@ -15,4 +15,10 @@ module CleanData
     end
   end
 
+  def format_fixnum(num)
+    num = num.to_i
+    num = "N/A" if num == 0
+    num
+  end
+
 end

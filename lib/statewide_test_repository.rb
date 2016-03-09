@@ -3,20 +3,20 @@ require_relative '../lib/statewide_test'
 require_relative '../lib/data_manager'
 
 class StatewideTestRepository
-  attr_reader :stw_tests
+  attr_reader :statewide_tests
 
-  def initialize(stw_tests = [])
-    @stw_tests = stw_tests
+  def initialize(statewide_tests = [])
+    @statewide_tests = statewide_tests
   end
 
   def load_data(data)
     data_manager = DataManager.new
     data_manager.load_data(data)
-    @stw_tests = data_manager.create_stw_tests
+    @statewide_tests = data_manager.create_statewide_tests
   end
 
   def find_by_name(name)
-    @stw_tests.find { |stw_test| stw_test.name == name.upcase }
+    @statewide_tests.find {|statewide_test| statewide_test.name == name.upcase}
   end
 
 end

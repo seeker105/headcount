@@ -16,7 +16,7 @@ class StatewideTestTest < Minitest::Test
     :reading => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Reading.csv",
     :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"}
     })
-  @@stw_test = @@stw_test_repo.stw_tests.first
+  @@stw_test = @@stw_test_repo.statewide_tests.first
 
   def test_can_create_statewidetest_object
     assert_kind_of StatewideTest, @@stw_test
