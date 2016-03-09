@@ -58,16 +58,18 @@ class DataManager
     end
   end
 
+  def district_alread_created?(row)
+    all_districts.any? {|district| district.name == row[:location].upcase}
+  end
+
   def create_districts(row)
-    unless all_districts.any? {|district| district.name ==
-        row[:location].upcase}
+    unless district_alread_created?(row)
       all_districts << District.new({name: row[:location].upcase})
     end
   end
 
   def create_repos(file, name, row)
     if enrollments_map.include?(name)
-      # remove file when done
       collect_enrollments_data(enrollments_map[name], row)
     elsif statewide_test_map.include?(name)
       collect_statewide_grade_data(statewide_test_map[name], row)
@@ -83,26 +85,40 @@ class DataManager
      :high_school_graduation => hs_district_with_data}
   end
 
+  def statewide_test_map
+    { third_grade: third_grade_data, eighth_grade: eighth_grade_data}
+  end
+
+  def statewide_race_map
+    {math: math_data, reading: reading_data, writing: writing_data}
+  end
+
+  def economic_profile_map
+    {median_household_income: med_house_income_data,
+     children_in_poverty: child_in_pov_data,
+     free_or_reduced_price_lunch: free_or_reduce_lunch_data,
+     title_i: title_i_data}
+  end
+
   def collect_enrollments_data(group, row)
     standard_location_year_percentage_data(group, row)
   end
 
   def create_enrollments
-    all_districts.each do |district|
-      unless hs_district_with_data.empty?
-        all_enrollments << Enrollment.new({name: district.name.upcase,
-  kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase),
-  high_school_graduation: hs_district_with_data.fetch(district.name.upcase)})
-      else
-        all_enrollments << Enrollment.new({name: district.name.upcase,
-  kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
-      end
+    all_enrollments = all_districts.map do |district|
+      create_indiv_enrollments(district)
     end
-    all_enrollments
   end
 
-  def statewide_test_map
-    { third_grade: third_grade_data, eighth_grade: eighth_grade_data}
+  def create_indiv_enrollments(district)
+    unless hs_district_with_data.empty?
+      Enrollment.new({name: district.name.upcase,
+kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase),
+high_school_graduation: hs_district_with_data.fetch(district.name.upcase)})
+    else
+      Enrollment.new({name: district.name.upcase,
+kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
+    end
   end
 
   def collect_statewide_grade_data(group, row)
@@ -119,10 +135,6 @@ class DataManager
         group.fetch(row[:location].upcase).merge!(data_format)
       end
     end
-  end
-
-  def statewide_race_map
-    {math: math_data, reading: reading_data, writing: writing_data}
   end
 
   def collect_statewide_race_data(group, row)
@@ -161,13 +173,6 @@ class DataManager
       reading: reading_data.fetch(district.name.upcase),
       writing: writing_data.fetch(district.name.upcase)
     })
-  end
-
-  def economic_profile_map
-    {median_household_income: med_house_income_data,
-     children_in_poverty: child_in_pov_data,
-     free_or_reduced_price_lunch: free_or_reduce_lunch_data,
-     title_i: title_i_data}
   end
 
   def collect_economic_profile_data(file, group, row)
@@ -222,13 +227,13 @@ class DataManager
   def create_economic_profiles
     all_economic_profiles = all_districts.map do |district|
       name = district.name.upcase
-      profile = create_individual_economic_profile(name)
+      profile = create_indiv_economic_profile(name)
       profile.name = name
       profile
     end
   end
 
-  def create_individual_economic_profile(name)
+  def create_indiv_economic_profile(name)
     EconomicProfile.new(
       {median_household_income: med_house_income_data.fetch(name),
        children_in_poverty: child_in_pov_data.fetch(colorado_check(name)),
