@@ -10,7 +10,7 @@ class DistrictRepository
                 :statewide_test_repo, :economic_profile_repo
 
   def initialize
-    @districts             = []
+    # @districts             = []
     @data_manager          = DataManager.new
     @enrollment_repo       = EnrollmentRepository.new
     @statewide_test_repo   = StatewideTestRepository.new
@@ -25,25 +25,29 @@ class DistrictRepository
 
   def load_data(data)
     data_manager.load_data(data)
-    populate_district_repo
+    populate_district_repo(data_manager.all_districts)
     data.each_key { |key| load_map[key].load_data({key => data[key]}) }
     load_relationships
   end
 
-  def populate_district_repo
-    @districts = data_manager.all_districts
+  def populate_district_repo(raw_districts)
+    @districts = raw_districts.each_with_object({}) do |district, object|
+      object[district.name] = district
+    end
   end
 
   def find_by_name(name)
-    districts.find { |district| district.name == name.upcase }
+    districts[name.upcase]
   end
 
   def find_all_matching(name)
-    districts.select { |district| district.name.include?(name.upcase) }
+    districts.each_with_object([]) do |district, object|
+      object << district.last if district.first.include?(name)
+    end
   end
 
   def load_relationships
-    districts.each do |district|
+    districts.each_value do |district|
       district.enrollment       = repo_connect(district, enrollment_repo)
       district.statewide_test   = repo_connect(district, statewide_test_repo)
       district.economic_profile = repo_connect(district, economic_profile_repo)

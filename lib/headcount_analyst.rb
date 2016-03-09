@@ -84,7 +84,9 @@ class HeadcountAnalyst
 
   def kindergarten_participation_correlates_with_high_school_graduation(input)
     if input.has_value?('STATEWIDE')
-      check_correlation(district_repo.districts)
+      # binding.pry
+      # check_correlation(district_repo.districts)
+      check_correlation(district_repo.districts.values)
     else
       check_correlation(input.values.flatten)
     end

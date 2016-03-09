@@ -9,58 +9,30 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_find_by_name_returns_district
     # skip
-    district_1    = District.new({name: "New York"})
-    district_repo = DistrictRepository.new
-    district_repo.districts << district_1
+    submitted = @@district_repo.find_by_name("ACADEMY 20")
 
-    submitted = district_repo.find_by_name("New York")
-    expected  = district_1
-
-    assert_equal expected, submitted
+    assert_kind_of District, submitted
+    assert_equal 'ACADEMY 20', submitted.name
   end
 
   def test_find_by_name_returns_nil_with_no_match
     # skip
-    district_1    = District.new({name: "New York"})
-    district_repo = DistrictRepository.new
-    district_repo.districts << district_1
-
-    submitted = district_repo.find_by_name("Colorado")
-    expected  = district_1
+    submitted = @@district_repo.find_by_name("MEGA SCHOOL")
 
     assert_nil submitted
   end
 
   def test_find_all_by_matching_returns_array_of_potential_matches
     # skip
-    district_1 = District.new({name: "New York"})
-    district_2 = District.new({name: "New Hampsire"})
-    district_3 = District.new({name: "Canada"})
-    district_repo = DistrictRepository.new
-
-    district_repo.districts << district_1
-    district_repo.districts << district_2
-    district_repo.districts << district_3
-
-    submitted = district_repo.find_all_matching("New")
-    expected  = [district_1, district_2]
+    submitted = @@district_repo.find_all_matching("BRI")
+    expected  = 2
 
     assert_kind_of Array, submitted
-    assert_equal expected, submitted
+    assert_equal expected, submitted.count
   end
 
   def test_find_all_by_matching_returns_empty_array_if_no_matches
-    # skip
-    district_1 = District.new({name: "New York"})
-    district_2 = District.new({name: "New Hampsire"})
-    district_3 = District.new({name: "Canada"})
-    district_repo = DistrictRepository.new
-
-    district_repo.districts << district_1
-    district_repo.districts << district_2
-    district_repo.districts << district_3
-
-    submitted = district_repo.find_all_matching("Georgia")
+    submitted = @@district_repo.find_all_matching("Georgia")
 
     assert_kind_of Array, submitted
     assert_empty submitted
