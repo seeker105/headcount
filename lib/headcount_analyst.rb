@@ -110,28 +110,27 @@ class HeadcountAnalyst
     district_repo.statewide_test_repo.statewide_tests.map do |stw_test|
       next if stw_test.name == "COLORADO"
       grade = select_grade(args, stw_test).clone
-      args_path(args, stw_test, grade)
+      check_subject_specific(args, stw_test, grade)
     end
   end
 
-  def args_path(args, stw_test, grade)
+  def check_subject_specific(args, stw_test, grade)
     if args.has_key?(:subject)
       calc_yr_to_yr_growth(stw_test.name, grade, args[:subject])
     else
-      new_method(args, stw_test, grade)
+      all_subjects(args, stw_test, grade)
     end
   end
 
-  def growth_by_dicipline(stw_test, grade)
+  def growth_by_subject(stw_test, grade)
     math    = calc_yr_to_yr_growth(stw_test.name, grade, :math)
     reading = calc_yr_to_yr_growth(stw_test.name, grade, :reading)
     writing = calc_yr_to_yr_growth(stw_test.name, grade, :writing)
     {math: math, reading: reading, writing: writing}
   end
 
-  def new_method(args, stw_test, grade)
-    subjects = growth_by_dicipline(stw_test, grade)
-
+  def all_subjects(args, stw_test, grade)
+    subjects = growth_by_subject(stw_test, grade)
     if args.has_key?(:weighting)
       weighted = weigh_subjects(args, subjects)
       total    = weighted.values.map {|pair| pair.last}.reduce(:+)

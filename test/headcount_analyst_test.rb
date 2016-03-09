@@ -60,7 +60,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_third_grade_math
-    # skip
     args      = {grade: 3, subject: :math}
     submitted = @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
     expected  = ["WILEY RE-13 JT", 0.3]
@@ -69,7 +68,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_eighth_grade_reading
-    # skip
     args      = {grade: 8, subject: :reading}
     submitted = @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
     expected  = ["COTOPAXI RE-3", 0.131]
@@ -78,7 +76,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_third_grade
-    # skip
     args      = {grade: 3}
     submitted = @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
     expected  = ["SANGRE DE CRISTO RE-22J", 0.071]
@@ -87,7 +84,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_eighth_grade
-    # skip
     args      = {grade: 8}
     submitted = @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
     expected  = ["OURAY R-1", 0.11]
@@ -96,7 +92,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_top_three_third_grade
-    # skip
     args      = {grade: 3, top: 3, subject: :math}
     submitted = @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
     expected  = [ ["WILEY RE-13 JT", 0.3],
@@ -108,7 +103,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_top_five_third_grade
-    # skip
     args      = {grade: 3, top: 5, subject: :math}
     submitted = @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
     expected  = [ ["WILEY RE-13 JT", 0.3], ["SANGRE DE CRISTO RE-22J", 0.071],
@@ -119,7 +113,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_weighted
-    # skip
     args    = {grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0}}
     submitted = @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
     expected  = ["OURAY R-1", 0.153]
@@ -128,7 +121,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_weights_over_one
-    # skip
     args = {grade: 8, :weighting => {:math => 1.5, :reading => 0.5, :writing => 0.0}}
     assert_raises ArgumentError do
       @@headcount_analyst.top_statewide_test_year_over_year_growth(args)
@@ -136,7 +128,6 @@ class HeadcountAnalystTest < Minitest::Test
   end
 
   def test_top_statewide_test_year_over_year_growth_weights_under_one
-    # skip
     args = {grade: 8, :weighting => {:math => 0.25, :reading => 0.25, :writing => 0.0}}
     assert_raises ArgumentError do
       @@headcount_analyst.top_statewide_test_year_over_year_growth(args)

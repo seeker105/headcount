@@ -12,6 +12,10 @@ class StatewideTestRepositoryTest < Minitest::Test
     assert_kind_of StatewideTestRepository, @@stw_test_repo
   end
 
+  def test_can_load_data
+    skip
+  end
+
   def test_statewide_test_repo_finds_a_statewide_test_by_name
     name      = 'ACADEMY 20'
     submitted = @@stw_test_repo.find_by_name(name)
