@@ -1,5 +1,4 @@
 class UnknownDataError < StandardError
-  # "9 is not a known grade"
 end
 
 class UnknownRaceError < StandardError

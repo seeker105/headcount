@@ -8,7 +8,6 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_find_by_name_returns_district
-    # skip
     submitted = @@district_repo.find_by_name("ACADEMY 20")
 
     assert_kind_of District, submitted
@@ -16,14 +15,12 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_find_by_name_returns_nil_with_no_match
-    # skip
     submitted = @@district_repo.find_by_name("MEGA SCHOOL")
 
     assert_nil submitted
   end
 
   def test_find_all_by_matching_returns_array_of_potential_matches
-    # skip
     submitted = @@district_repo.find_all_matching("BRI")
     expected  = 2
 
@@ -39,7 +36,6 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_district_repo_can_search_enrollment_repo_insensitive_search
-    # skip
     district  = @@district_repo.find_by_name("academy 20")
 
     submitted = district.enrollment.kindergarten_participation_in_year(2010)
@@ -49,7 +45,6 @@ class DistrictRepositoryTest < Minitest::Test
   end
 
   def test_district_repo_can_access_enrollment_methods_through_district
-    # skip
     district = @@district_repo.find_by_name("GUNNISON WATERSHED RE1J")
 
     submitted = district.enrollment.kindergarten_participation_in_year(2004)

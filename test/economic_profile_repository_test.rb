@@ -38,5 +38,4 @@ class EconomicProfileRepositoryTest < Minitest::Test
     assert_equal 181, repo.economic_profiles.count
   end
 
-
 end

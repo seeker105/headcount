@@ -1,5 +1,4 @@
 require 'pry'
-require_relative '../lib/economic_profile'
 require_relative '../lib/data_manager'
 
 class EconomicProfileRepository

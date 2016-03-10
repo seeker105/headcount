@@ -4,6 +4,7 @@ require_relative '../lib/clean_data'
 require_relative '../lib/district'
 require_relative '../lib/enrollment'
 require_relative '../lib/statewide_test'
+require_relative '../lib/economic_profile'
 
 class DataManager
   include CleanData
