@@ -23,11 +23,19 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
     assert_equal name, submitted.name
   end
 
-  def test_economic_profile
+  def test_economic_profile_repo_can_find_profile_by_name
     name      = 'ACADEMY 20'
     submitted = @@district_repo.economic_profile_repo.find_by_name(name)
 
     assert_kind_of EconomicProfile, submitted
+    assert_equal name, submitted.name
+  end
+
+  def test_enrollment_repo_can_find_profile_by_name
+    name      = 'ACADEMY 20'
+    submitted = @@district_repo.enrollment_repo.find_by_name(name)
+
+    assert_kind_of Enrollment, submitted
     assert_equal name, submitted.name
   end
 
