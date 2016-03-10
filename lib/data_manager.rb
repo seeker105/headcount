@@ -125,7 +125,7 @@ class DataManager
   end
 
   def create_enrollments
-    all_enrollments = all_districts.map do |district|
+    @all_enrollments = all_districts.map do |district|
       create_indiv_enrollments(district)
     end
   end
@@ -194,7 +194,7 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
   end
 
   def create_statewide_tests
-    all_stw_tests = all_districts.map do |district|
+    @all_stw_tests = all_districts.map do |district|
       create_inividual_statewide_test(district)
     end
   end

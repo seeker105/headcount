@@ -161,7 +161,7 @@ class HeadcountAnalyst
   end
 
   def calc_yr_to_yr_growth(name, grade, subject)
-    grade.delete_if { |key, value| value.dig(subject) == 0.0 }
+    grade.delete_if { |_key, value| value.dig(subject) == 0.0 }
     unless grade.length < 2
       growth = grade.dig(grade.keys.max, subject) -
         grade.dig(grade.keys.min, subject)
