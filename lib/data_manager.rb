@@ -235,20 +235,15 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
 
   def collect_reduced_price_lunch_data(group, row)
     if row[:poverty_level] == "Eligible for Free or Reduced Lunch"
-      if row[:dataformat] == "Percent"
-        create_or_merge_lunch_percentages(group, row)
-      else
-        create_or_merge_lunch_totals(group, row)
-        # unless group.has_key?(row[:location].upcase)
-        #   group[row[:location].upcase] =
-        #     {row[:timeframe].to_i => {percentage: 0,
-        #                               total: format_fixnum(row[:data].to_i)}}
-        # else
-        #   group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-        #     {percentage: group.dig(row[:location].upcase,
-        #       row[:timeframe].to_i, :percentage),
-        #         total: format_fixnum(row[:data].to_i)}})
-      end
+      collect_lunch_percentage_or_total(group, row)
+    end
+  end
+
+  def collect_lunch_percentage_or_total(group, row)
+    if row[:dataformat] == "Percent"
+      create_or_merge_lunch_percentages(group, row)
+    else
+      create_or_merge_lunch_totals(group, row)
     end
   end
 
