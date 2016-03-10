@@ -220,6 +220,10 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
 
   def collect_med_house_income_data(group, row)
     range = row[:timeframe].split('-').map(&:to_i)
+    create_or_merge_med_house_income_data(group, row, range)
+  end
+
+  def create_or_merge_med_house_income_data(group, row, range)
     unless group.has_key?(row[:location].upcase)
       group[row[:location].upcase] =
         {range => format_fixnum(row[:data].to_i)}
@@ -232,16 +236,17 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
   def collect_reduced_price_lunch_data(group, row)
     if row[:poverty_level] == "Eligible for Free or Reduced Lunch"
       if row[:dataformat] == "Percent"
-        unless group.has_key?(row[:location].upcase)
-          group[row[:location].upcase] =
-            {row[:timeframe].to_i => {percentage: format_pct(row[:data].to_f),
-                                      total: 0}}
-        else
-          group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
-            {percentage: format_pct(row[:data].to_f),
-              total: group.dig(row[:location].upcase,
-                row[:timeframe].to_i, :total)}})
-        end
+        create_or_merge_lunch_percentages(group, row)
+        # unless group.has_key?(row[:location].upcase)
+        #   group[row[:location].upcase] =
+        #     {row[:timeframe].to_i => {percentage: format_pct(row[:data].to_f),
+        #                               total: 0}}
+        # else
+        #   group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
+        #     {percentage: format_pct(row[:data].to_f),
+        #       total: group.dig(row[:location].upcase,
+        #         row[:timeframe].to_i, :total)}})
+        # end
       else
         unless group.has_key?(row[:location].upcase)
           group[row[:location].upcase] =
@@ -254,6 +259,18 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
                 total: format_fixnum(row[:data].to_i)}})
         end
       end
+    end
+  end
+
+  def create_or_merge_lunch_percentages(group, row)
+    unless group.has_key?(row[:location].upcase)
+      group[row[:location].upcase] = { row[:timeframe].to_i =>
+         {percentage: format_pct(row[:data].to_f), total: 0}}
+    else
+      group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
+        {percentage: format_pct(row[:data].to_f),
+          total: group.dig(row[:location].upcase,
+            row[:timeframe].to_i, :total)}})
     end
   end
 
