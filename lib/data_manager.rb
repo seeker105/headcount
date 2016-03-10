@@ -8,7 +8,6 @@ require_relative '../lib/economic_profile'
 
 class DataManager
   include CleanData
-
   attr_reader :all_districts, :all_enrollments, :all_stw_tests,
                 :all_economic_profiles,
               :kg_dist_with_data, :hs_district_with_data,
@@ -28,7 +27,6 @@ class DataManager
 
     @third_grade_data = {}
     @eighth_grade_data = {}
-
     @math_data = {}
     @reading_data = {}
     @writing_data = {}
@@ -190,7 +188,7 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
   end
 
   def format_string_to_key(string)
-    string.gsub("Hawaiian/", "").gsub(" ", "_").downcase.to_sym
+    string.gsub("Hawaiian/", "").tr(" ", "_").downcase.to_sym
   end
 
   def create_statewide_tests
