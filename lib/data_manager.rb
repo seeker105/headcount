@@ -9,8 +9,8 @@ require_relative '../lib/economic_profile'
 class DataManager
   include CleanData
 
-  attr_reader :all_districts, :all_enrollments,
-                :all_stw_tests, :all_economic_profiles,
+  attr_reader :all_districts, :all_enrollments, :all_stw_tests,
+                :all_economic_profiles,
               :kg_dist_with_data, :hs_district_with_data,
               :third_grade_data, :eighth_grade_data,
               :math_data, :reading_data, :writing_data,
@@ -200,13 +200,12 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
   end
 
   def create_inividual_statewide_test(district)
-    StatewideTest.new({name: district.name.upcase,
+    StatewideTest.new({ name: district.name.upcase,
       third_grade: third_grade_data.fetch(district.name.upcase),
       eighth_grade: eighth_grade_data.fetch(district.name.upcase),
       math: math_data.fetch(district.name.upcase),
       reading: reading_data.fetch(district.name.upcase),
-      writing: writing_data.fetch(district.name.upcase)
-    })
+      writing: writing_data.fetch(district.name.upcase) })
   end
 
   def collect_economic_profile_data(file, group, row)
@@ -262,9 +261,8 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
 
   def create_or_merge_lunch_totals(group, row)
     unless group.has_key?(row[:location].upcase)
-      group[row[:location].upcase] =
-        {row[:timeframe].to_i => {percentage: 0,
-                                  total: format_fixnum(row[:data].to_i)}}
+      group[row[:location].upcase] = {row[:timeframe].to_i => {percentage: 0,
+        total: format_fixnum(row[:data].to_i)}}
     else
       group.fetch(row[:location].upcase).merge!({row[:timeframe].to_i =>
         {percentage: group.dig(row[:location].upcase,
@@ -287,8 +285,7 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
       { median_household_income: med_house_income_data.fetch(name),
         children_in_poverty: child_in_pov_data.fetch(colorado_check(name)),
         free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(name),
-        title_i: title_i_data.fetch(name)
-      })
+        title_i: title_i_data.fetch(name) })
   end
 
   def colorado_check(name)
@@ -304,5 +301,4 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
          format_pct(row[:data].to_f)})
     end
   end
-
 end
