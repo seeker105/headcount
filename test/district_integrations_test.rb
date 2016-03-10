@@ -4,15 +4,13 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
   include TestHelper
 
   def district_repo_can_find_kindergarten_enrollment_participation_in_given_year
-    district = @@district_repo.find_by_name("ACADEMY 20")
-    submitted = district.enrollment.kindergarten_participation_in_year(2010)
+    submitted = @@district.enrollment.kindergarten_participation_in_year(2010)
 
     assert_equal 0.436, submitted
   end
 
   def test_statewide_test_repo_returns_nil_for_a_bad_name
-    district = @@district_repo.find_by_name("ACADEMY 20")
-    submitted = district.statewide_test
+    submitted = @@district.statewide_test
 
     assert_kind_of StatewideTest, submitted
   end
@@ -26,9 +24,11 @@ class DistrictRepositoryIntegrationsTest < Minitest::Test
   end
 
   def test_economic_profile
-    skip
-    # binding.pry
+    name      = 'ACADEMY 20'
+    submitted = @@district_repo.economic_profile_repo.find_by_name(name)
 
+    assert_kind_of EconomicProfile, submitted
+    assert_equal name, submitted.name
   end
 
   def test_enrollment_returns_the_correct_enrollment_object
