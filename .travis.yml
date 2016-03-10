@@ -1,9 +1,10 @@
 language: ruby
 rvm:
- - "2.2.1"
+ - "2.3.0"
+ # - "2.2.1"
  # - "1.8.7"
  # - "1.9.2"
  # - "1.9.3"
  # - rbx
 # uncomment this line if your project needs to run something other than `rake`:
-script: bundle exec mrspec --color
+script: bundle exec mrspec
