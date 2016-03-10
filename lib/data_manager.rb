@@ -100,8 +100,8 @@ class DataManager
   end
 
   def enrollments_map
-    {:kindergarten => kg_dist_with_data,
-     :high_school_graduation => hs_district_with_data}
+    { kindergarten: kg_dist_with_data,
+      high_school_graduation: hs_district_with_data }
   end
 
   def statewide_test_map
@@ -109,14 +109,14 @@ class DataManager
   end
 
   def statewide_race_map
-    {math: math_data, reading: reading_data, writing: writing_data}
+    { math: math_data, reading: reading_data, writing: writing_data }
   end
 
   def economic_profile_map
-    {median_household_income: med_house_income_data,
-     children_in_poverty: child_in_pov_data,
-     free_or_reduced_price_lunch: free_or_reduce_lunch_data,
-     title_i: title_i_data}
+    { median_household_income: med_house_income_data,
+      children_in_poverty: child_in_pov_data,
+      free_or_reduced_price_lunch: free_or_reduce_lunch_data,
+      title_i: title_i_data }
   end
 
   def collect_enrollments_data(group, row)
@@ -283,10 +283,10 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
 
   def create_indiv_economic_profile(name)
     EconomicProfile.new(
-      {median_household_income: med_house_income_data.fetch(name),
-       children_in_poverty: child_in_pov_data.fetch(colorado_check(name)),
-       free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(name),
-       title_i: title_i_data.fetch(name)
+      { median_household_income: med_house_income_data.fetch(name),
+        children_in_poverty: child_in_pov_data.fetch(colorado_check(name)),
+        free_or_reduced_price_lunch: free_or_reduce_lunch_data.fetch(name),
+        title_i: title_i_data.fetch(name)
       })
   end
 
