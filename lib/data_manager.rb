@@ -169,19 +169,21 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
     district       = row[:location].upcase
     year           = row[:timeframe].to_i
     data           = format_pct(row[:data].to_f)
-
     data_format = format_nested_hash(race_ethnicity, year, data)
+    create_or_merge_stw_race_data(group, row, district, data_format)
+  end
 
-    unless group.has_key?(row[:location].upcase)
-      group[row[:location].upcase] = data_format
+  def create_or_merge_stw_race_data(group, row, district, data_format)
+    unless group.has_key?(district)
+      group[district] = data_format
     else
-      unless group.dig(row[:location].upcase,
+      unless group.dig(district,
           format_string_to_key(row[:race_ethnicity])).nil?
-        group.dig(row[:location].upcase,
+        group.dig(district,
           format_string_to_key(row[:race_ethnicity])).merge!(
           {row[:timeframe].to_i => format_pct(row[:data].to_f)})
       else
-        group.fetch(row[:location].upcase).merge!(data_format)
+        group.fetch(district).merge!(data_format)
       end
     end
   end
@@ -191,7 +193,6 @@ kindergarten_participation: kg_dist_with_data.fetch(district.name.upcase)})
   end
 
   def create_statewide_tests
-    # remove all_stw_tests variable?
     all_stw_tests = all_districts.map do |district|
       create_inividual_statewide_test(district)
     end
